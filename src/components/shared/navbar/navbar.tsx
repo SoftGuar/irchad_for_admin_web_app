@@ -1,10 +1,17 @@
 import { MagnifyingGlassIcon, BellIcon, UserCircleIcon } from "@heroicons/react/24/outline";
+import Image from "next/image";
 
 const Navbar = () => {
   const user = { name: "Aouinine Lylia", role: "Super Admin" };
 
   return (
     <nav className="bg-[#2E2E2E] text-white py-3 px-6 flex items-center justify-between">
+      {/* Logo */}
+      <div className="flex items-center gap-2 text-xl font-bold text-white">
+        <Image src="/images/logo.png" alt="IRCHAD" width={32} height={32} />
+        <span>IRCHAD</span>
+      </div>
+
       {/* Search Bar */}
       <div className="flex items-center bg-[#2E2E2E] px-3 py-2 rounded-md border-[#FF8B0029] border-1">
         <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 " />
