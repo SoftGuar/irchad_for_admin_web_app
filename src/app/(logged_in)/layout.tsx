@@ -25,7 +25,7 @@ export default function Layout({
             <Navbar />
             <div className="flex">
                 <Sidebar />
-                <main className="flex-1 p-6 bg-gray-100">{children}</main>
+                <main className="flex-1 bg-irchad-gray-dark">{children}</main>
             </div>
             <Footer />
         </>
