@@ -6,17 +6,27 @@ interface Props {
 
 const DeviceImage: React.FC<Props> = ({ data }) => {
   return (
-    <div className="relative bg-gray-800 p-4 rounded-lg">
-      <img src={data.image} alt="Smart Glasses" className="w-full h-auto rounded-lg" />
-      <div className="absolute top-2 right-2 flex items-center space-x-2">
-        <span className="text-gray-400 text-sm">📍 Location: {data.location}</span>
+    <div className="relative bg-[#2E2E2E] p-4 rounded-lg">
+      {/* Image ajustée à la taille du conteneur */}
+      <div className="w-full h-[200px] md:h-[265px] rounded-lg overflow-hidden">
+        <img 
+          src={data.image} 
+          alt="Smart Glasses" 
+          className="w-full h-full object-cover rounded-lg"
+        />
+      </div>
+
+      {/* Infos en haut à droite */}
+      <div className="absolute top-2 right-2 flex flex-wrap items-center space-x-2 bg-black bg-opacity-50 p-2 rounded-lg">
+        <span className="text-gray-400 text-sm">📍 {data.location}</span>
         <span className={`text-sm ${data.status === "Active" ? "text-green-400" : "text-red-400"}`}>
-          ⚡ Status: {data.status}
+          ⚡ {data.status}
         </span>
-        <span className="text-gray-400 text-sm">🔋 Battery: {data.battery}</span>
+        <span className="text-gray-400 text-sm">🔋 {data.battery}</span>
       </div>
     </div>
   );
 };
+
 
 export default DeviceImage;

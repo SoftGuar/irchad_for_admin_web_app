@@ -9,7 +9,7 @@ interface HistoryItem {
   
   const MaintenanceHistory: React.FC<Props> = ({ history }) => {
     return (
-      <div className="bg-gray-800 p-4 rounded-lg h-64"> {/* Fixed height */}
+      <div className="bg-[#2E2E2E]  p-4 rounded-lg h-64"> {/* Fixed height */}
         <h2 className="text-lg font-semibold">Maintenance History</h2>
         
         {/* Scrollable history container */}
