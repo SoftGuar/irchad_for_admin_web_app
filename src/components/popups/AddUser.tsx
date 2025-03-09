@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { X } from "lucide-react";
 
 interface AddUserProps {
@@ -11,14 +10,14 @@ const AddUser: React.FC<AddUserProps> = ({ closePopup }) => {
     };
   
     return (
-      <div className="flex flex-col relative bg-irchad-gray-dark shadow-xl p-[80px] rounded-[30px] space-y-5 w-1/3">
+      <div className="flex flex-col relative bg-irchad-gray-dark shadow-xl p-[45px] rounded-[30px] space-y-4 w-1/3">
         <div className="absolute top-10 right-10">
             <X className="cursor-pointer text-red-700" onClick={closePopup}/>
         </div>        
 
         <p className="text-xl text-irchad-white font-roboto-bold">Add User</p>
 
-        <div className="flex flex-col space-y-3 w-full">
+        <div className="flex flex-col space-y-2 w-full">
             <p className="text-[16px] text-irchad-gray-light font-roboto">First name</p>
             <input
                 type="text"
@@ -26,7 +25,7 @@ const AddUser: React.FC<AddUserProps> = ({ closePopup }) => {
             />
         </div>
 
-        <div className="flex flex-col space-y-3 w-full">
+        <div className="flex flex-col space-y-2 w-full">
             <p className="text-[16px] text-irchad-gray-light font-roboto">Last name</p>
             <input
                 type="text"
@@ -34,7 +33,7 @@ const AddUser: React.FC<AddUserProps> = ({ closePopup }) => {
             />
         </div>
 
-        <div className="flex flex-col space-y-3 w-full">
+        <div className="flex flex-col space-y-2 w-full">
             <p className="text-[16px] text-irchad-gray-light font-roboto">Password</p>
             <input
                 type="password"
@@ -42,7 +41,15 @@ const AddUser: React.FC<AddUserProps> = ({ closePopup }) => {
             />
         </div>
 
-        <div className="flex flex-col space-y-3 w-full">
+        <div className="flex flex-col space-y-2 w-full">
+            <p className="text-[16px] text-irchad-gray-light font-roboto">Phone number</p>
+            <input
+                type="text"
+                className="border border-irchad-gray-light bg-irchad-gray rounded-lg p-4 text-[16px] text-irchad-gray-light font-roboto"
+            />
+        </div>
+
+        <div className="flex flex-col space-y-2 w-full">
             <p className="text-[16px] text-irchad-gray-light font-roboto">E-mail</p>
             <input
                 type="email"

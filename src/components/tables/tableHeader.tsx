@@ -78,7 +78,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
         <input
           type="text"
           value={searchValue}
-          className="text-[#959595] bg-transparent text-[16px] font-product-sans focus:outline-none"
+          className="text-[#959595] bg-transparent text-[16px] font-roboto focus:outline-none"
           onChange={onSearchChange}
           placeholder={`Search for ${type}`}
         />
