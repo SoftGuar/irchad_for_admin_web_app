@@ -36,7 +36,7 @@ const TableData = <T,>({ columns, data, onEdit, onDelete, page }: TableDataProps
             )}
           </div>
         ))}
-        <div className="flex w-1/12 justify-end items-center space-x-3">
+        <div className="flex w-1/12 justify-end items-center space-x-2">
             <Trash2 className="text-irchad-gray-light"/>
             <div className="flex space-x-3">
               <Filter className="text-irchad-gray-light"/>

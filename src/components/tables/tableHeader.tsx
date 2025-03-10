@@ -29,7 +29,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
       {/* Type and Item Count */}
       <div className="flex space-x-5 items-center">
         <p className="font-product-sans font-semibold text-[16px] capitalize">
-          {type}
+          {`${type}s`}
         </p>
         <div className="bg-[#2E2E2E] border border-[#FF8B00] px-4 py-1 rounded-2xl">
           <p className="text-[#FF8B00] text-[16px] font-roboto">
@@ -80,7 +80,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
           value={searchValue}
           className="text-[#959595] bg-transparent text-[16px] font-roboto focus:outline-none"
           onChange={onSearchChange}
-          placeholder={`Search for ${type}`}
+          placeholder={type === "decision maker" ? `Search` : `Search for ${type}`}
         />
       </div>
 
