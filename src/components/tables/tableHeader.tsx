@@ -89,7 +89,11 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
         className="absolute right-5 bg-[#FF8B00] px-4 py-2 rounded-lg cursor-pointer"
         onClick={openAddPopup}
       >
-        <p className="text-[#1E1E1E] text-[16px]">+ Add {type}</p>
+        {type === "decision maker" ? (
+          <p className="text-[16px] font-roboto text-[#1E1E1E]">+ Add</p>
+        ) : (
+          <p className="text-[16px] font-roboto text-[#1E1E1E]">+ Add {type}</p>
+        )}
       </div>
     </div>
   );

@@ -123,8 +123,8 @@ const AccountList: React.FC<AccountListProps> = ({ title, accountsData }) => {
 
       {showPopup && (
         <PopUpScreen>
-          {showPopup === "add" && <AddUser closePopup={closePopup} />}
-          {showPopup === "edit" && accountToEdit && <EditUser user={accountToEdit} closePopup={closePopup} />}
+          {showPopup === "add" && <AddUser type={title} closePopup={closePopup} />}
+          {showPopup === "edit" && accountToEdit && <EditUser type={title} user={accountToEdit} closePopup={closePopup} />}
           {showPopup === "delete" && accountToDelete && <DeleteUser user={accountToDelete} closePopup={closePopup} />}
         </PopUpScreen>
       )}
