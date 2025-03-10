@@ -6,13 +6,13 @@ interface Props {
 
 const DeviceImage: React.FC<Props> = ({ data }) => {
   return (
-    <div className="relative bg-[#2E2E2E] p-4 rounded-lg">
-      {/* Image ajustée à la taille du conteneur */}
+    <div className="relative bg-[#2E2E2E] p-4 rounded-lg h-full">
+      
       <div className="w-full h-[200px] md:h-[265px] rounded-lg overflow-hidden">
         <img 
           src={data.image} 
           alt="Smart Glasses" 
-          className="w-full h-full object-cover rounded-lg"
+          className="w-full h-full object-cover rounded-lg mt-16"
         />
       </div>
 

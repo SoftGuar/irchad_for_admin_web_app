@@ -1,4 +1,5 @@
 export interface DeviceData {
+    id: string;
     assignedUser: any;
     image: string;
     location: string;
