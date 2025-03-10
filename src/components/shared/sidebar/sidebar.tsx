@@ -24,7 +24,7 @@ const Sidebar = () => {
 
   return (
     <div
-      className="w-64 h-screen p-4"
+      className="w-64 min-h-screen p-4"
       style={{
         backgroundColor: "#2E2E2E",
         borderTop: "1px solid #959595",
@@ -67,7 +67,7 @@ const Sidebar = () => {
         {/* Sub-menu */}
         {isAccountsOpen && (
           <div className="ml-6 mt-1 space-y-1">
-            {["users", "admins", "maintenance", "commercial", "decision-makers"].map((item) => (
+            {["users", "admins", "maintainers", "commercials", "decision-makers"].map((item) => (
               <Link
                 key={item}
                 href={`/${item}`}
