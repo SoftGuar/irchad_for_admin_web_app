@@ -1,8 +1,10 @@
 import { MagnifyingGlassIcon, BellIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
   const user = { name: "Aouinine Lylia", role: "Super Admin" };
+  const router = useRouter()
 
   return (
     <nav className="bg-[#2E2E2E] text-white py-3 px-6 flex items-center justify-between">
@@ -20,9 +22,9 @@ const Navbar = () => {
 
       {/* Notification & User Info */}
       <div className="flex items-center gap-4">
-        <BellIcon className="h-6 w-6 text-gray-400 cursor-pointer hover:text-white" />
+        <BellIcon onClick={()=> router.push('/notifications')} className="h-6 w-6 text-gray-400 cursor-pointer hover:text-white" />
         <div className="flex items-center gap-2">
-          <UserCircleIcon className="h-8 w-8 text-gray-400" />
+          <UserCircleIcon onClick={()=> router.push('/profile')}  className="h-8 w-8 text-gray-400 cursor-pointer" />
           <div className="text-sm">
             <p className="font-semibold">{user.name}</p>
             <p className="text-gray-400 text-xs">{user.role}</p>
