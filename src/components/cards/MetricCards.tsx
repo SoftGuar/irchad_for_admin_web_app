@@ -7,13 +7,13 @@ interface MetricCardsProps {
   title: string;
   value: string | number;
   unit?: string;
-  percentage: number; // New prop for progress
+  percentage: number;  
   iconColor: string;
 }
 
 const MetricCards: React.FC<MetricCardsProps> = ({ title, value, unit, percentage, iconColor }) => {
   return (
-    <div className="bg-gray-900 p-4 rounded-xl border border-gray-700 flex items-center gap-4 shadow-lg w-48">
+    <div className="bg-[#2E2E2E] p-4 rounded-xl border border-gray-700 flex items-center gap-4 shadow-lg w-full">
       <div className="relative w-12 h-12">
         <Circle 
           percent={percentage} 
