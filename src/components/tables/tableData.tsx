@@ -1,5 +1,5 @@
 import { useRouter } from "next/navigation";
-import {Trash2, Filter, Pen, ArrowRight} from "lucide-react";
+import {Trash2, Filter, Pen, ArrowRight, Ban} from "lucide-react";
 
 interface Column<T> {
   key: keyof T;
@@ -14,7 +14,13 @@ interface TableDataProps<T> {
   page: string;
 }
 
-const TableData = <T,>({ columns, data, onEdit, onDelete, page }: TableDataProps<T>) => {
+const TableData = <T,>({ 
+  columns, 
+  data, 
+  onEdit = () => {}, 
+  onDelete = () => {}, 
+  page 
+}: TableDataProps<T>) => {
   const router = useRouter();
 
   const openDetails = (id: any) => {
@@ -63,7 +69,11 @@ const TableData = <T,>({ columns, data, onEdit, onDelete, page }: TableDataProps
             ))}
             <div className="flex w-1/12 justify-end items-center space-x-6">
               <Trash2 className="text-irchad-gray-light cursor-pointer" onClick={() => onDelete(item)}/>
-              <Pen className="text-irchad-gray-light cursor-pointer" onClick={() => onEdit(item)}/>
+              {page === "devices" ? 
+                <Ban className="text-irchad-gray-light cursor-pointer" onClick={() => onEdit(item)}/>
+                : 
+                <Pen className="text-irchad-gray-light cursor-pointer" onClick={() => onEdit(item)}/>
+              }
               <ArrowRight className="text-irchad-gray-light cursor-pointer" onClick={() => openDetails(item[columns[0].key])}/>
             </div>
           </div>
