@@ -7,15 +7,7 @@ import HeaderSection from "@/components/tables/tableHeader";
 import Pagination from "@/components/tables/paginationComponent";
 import TableData from "@/components/tables/tableData";
 import { useState } from "react";
-
-interface Account {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-  addingDate: string;
-  lastEdited: string;
-}
+import { Account } from "@/types/account";
 
 interface AccountListProps {
   title: string;
@@ -125,7 +117,7 @@ const AccountList: React.FC<AccountListProps> = ({ title, accountsData }) => {
         <PopUpScreen>
           {showPopup === "add" && <AddUser type={title} closePopup={closePopup} />}
           {showPopup === "edit" && accountToEdit && <EditUser type={title} user={accountToEdit} closePopup={closePopup} />}
-          {showPopup === "delete" && accountToDelete && <DeleteUser user={accountToDelete} closePopup={closePopup} />}
+          {showPopup === "delete" && accountToDelete && <DeleteUser account={accountToDelete} closePopup={closePopup} />}
         </PopUpScreen>
       )}
     </div>

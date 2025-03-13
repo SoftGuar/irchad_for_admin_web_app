@@ -1,16 +1,16 @@
 "use client";
 import { X } from "lucide-react";
-import { Account } from "@/types/account";
-
+import { Device } from "@/types/device";
+  
 interface DeleteUserProps {
-    account: Account;
+    device: Device;
     closePopup: () => void;
 }
   
-const DeleteUser: React.FC<DeleteUserProps> = ({ account, closePopup }) => {
+const DeleteDevice: React.FC<DeleteUserProps> = ({ device, closePopup }) => {
   
     const handleDelete = () => {
-      console.log("deleted user:", account.name);
+      console.log("deleted user:", device.id);
       closePopup();
     };
   
@@ -20,9 +20,9 @@ const DeleteUser: React.FC<DeleteUserProps> = ({ account, closePopup }) => {
             <X className="cursor-pointer text-red-700" onClick={closePopup}/>
         </div>        
 
-        <p className="text-xl text-irchad-white font-roboto-bold">Do you confirm deleting this account?</p>
+        <p className="text-xl text-irchad-white font-roboto-bold">Do you confirm deleting this device?</p>
 
-        <p className="text-xl text-irchad-gray-light font-roboto">{account.name}</p>
+        <p className="text-xl text-irchad-gray-light font-roboto">{device.id}</p>
 
         <div className="flex space-x-4">
           <button onClick={closePopup} className="bg-irchad-gray border border-irchad-orange text-irchad-orange font-roboto px-4 py-2 rounded-[10px] outline-none">
@@ -38,4 +38,4 @@ const DeleteUser: React.FC<DeleteUserProps> = ({ account, closePopup }) => {
 };
   
 
-export default DeleteUser;
+export default DeleteDevice;
