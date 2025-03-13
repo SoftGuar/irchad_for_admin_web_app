@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { ChevronDown, ChevronRight, Users, LayoutGrid, Settings, MapPin } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
 
 const Sidebar = () => {
   const [isAccountsOpen, setIsAccountsOpen] = useState(true);
@@ -25,18 +24,12 @@ const Sidebar = () => {
 
   return (
     <div
-      className="w-64 h-screen p-4"
+      className="w-64 min-h-screen p-4"
       style={{
         backgroundColor: "#2E2E2E",
-        boxShadow: "8px 0 32px 0 rgba(0, 0, 6, 1)",
+        borderTop: "1px solid #959595",
       }}
     >
-      {/* Logo */}
-      <div className="flex items-center gap-2 text-xl font-bold text-white">
-        <Image src="/images/logo.png" alt="IRCHAD" width={32} height={32} />
-        <span>IRCHAD</span>
-      </div>
-
       {/* Navigation */}
       <nav className="mt-6 space-y-2">
         {/* Home Section */}
@@ -74,7 +67,7 @@ const Sidebar = () => {
         {/* Sub-menu */}
         {isAccountsOpen && (
           <div className="ml-6 mt-1 space-y-1">
-            {["users", "admins", "maintenance", "commercial", "decision-makers"].map((item) => (
+            {["users", "admins", "maintainers", "commercials", "decision-makers"].map((item) => (
               <Link
                 key={item}
                 href={`/${item}`}

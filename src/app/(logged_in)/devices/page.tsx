@@ -1,43 +1,34 @@
 "use client";
-import { useRouter } from "next/navigation";
+import Image from "next/image";
+import DeviceList from "@/components/lists/DeviceList";
 
-const devices = [
-  { id: "SC_01p33hhz38hngv", type: "Glasses", status: "Active", date: "Jan 6, 2024" },
-  { id: "FTDSYGYsd34r34843guy", type: "Glasses", status: "Active", date: "Jan 6, 2025" },
-];
+//sample data
+const devicesData = Array.from({ length: 95 }, (_, index) => ({
+  id: (index + 1).toString(),
+  type: "Type",
+  mac: "00:00:00:00:00:00",
+  status: "Active",
+  lastEdited: "2021-08-01",
+  activationDate: "2021-08-01",
+  assignedTo: "User",
+  version: "1.0",
+  photo: ""
+}));
 
-export default function DevicesPage() {
-  const router = useRouter();
-
+const DevicePage = () => {
   return (
-    <div className="min-h-screen w-full bg-gray-900 text-white flex flex-col p-6">
-      <h1 className="text-3xl font-bold mb-6 text-center">Devices</h1>
-      <div className="w-full overflow-x-auto">
-        <table className="w-full border border-gray-700 text-left">
-          <thead>
-            <tr className="bg-gray-800">
-              <th className="p-4 border border-gray-700">ID</th>
-              <th className="p-4 border border-gray-700">Type</th>
-              <th className="p-4 border border-gray-700">Status</th>
-              <th className="p-4 border border-gray-700">Added On</th>
-            </tr>
-          </thead>
-          <tbody>
-            {devices.map((device) => (
-              <tr
-                key={device.id}
-                className="cursor-pointer hover:bg-gray-800 transition"
-                onClick={() => router.push(`/devices/${device.id}`)}
-              >
-                <td className="p-4 border border-gray-700">{device.id}</td>
-                <td className="p-4 border border-gray-700">{device.type}</td>
-                <td className="p-4 border border-gray-700">{device.status}</td>
-                <td className="p-4 border border-gray-700">{device.date}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <div className="flex flex-col w-full min-h-screen pb-5">
+      <div className="flex w-full">
+        <Image src="/images/headers/users_header.svg"  alt="users header" width={1663} height={236}/>
+      </div>
+
+      <div className="relative flex justify-center items-center w-full min-h-screen">
+        <div className="absolute top-full left-1/2 transform -translate-x-1/2 -translate-y-full w-[95%]">
+          <DeviceList title="Device" devicesData={devicesData} />
+        </div>
       </div>
     </div>
   );
-}
+};
+
+export default DevicePage;
