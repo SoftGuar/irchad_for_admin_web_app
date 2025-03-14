@@ -9,9 +9,11 @@ interface UserHeaderBarProps {
     role: string;
     status: string;
   };
+  onEdit: () => void;
+  showDevice?: (tab:string)=>void
 }
 
-const UserHeaderBar: React.FC<UserHeaderBarProps> = ({ user }) => {
+const UserHeaderBar: React.FC<UserHeaderBarProps> = ({ user, onEdit, showDevice = ()=>{} }) => {
   const [activeTab, setActiveTab] = useState<"personal" | "device">("personal");
 
   return (
@@ -33,25 +35,28 @@ const UserHeaderBar: React.FC<UserHeaderBarProps> = ({ user }) => {
       </div>
 
       <div className="ml-auto flex items-center gap-4">
-        <AiTwotoneEdit className="text-white cursor-pointer" size={18} />
+        <AiTwotoneEdit className="text-white cursor-pointer" size={18} onClick={onEdit} />
 
-        {/* Personal Information Button */}
         <button
           className={`px-4 py-2 rounded-full underline underline-offset-2 ${
             activeTab === "personal" ? "bg-[#7D511F] text-white" : "bg-transparent text-white"
           }`}
-          onClick={() => setActiveTab("personal")}
+          onClick={() => {
+            setActiveTab("personal")
+            showDevice("personal");
+          }}
         >
           Personal Information
         </button>
 
-        {/* Device Button (Only for users) */}
         {user.role === "user" ? (
           <button
             className={`px-4 py-2 rounded-full underline underline-offset-2 ${
               activeTab === "device" ? "bg-[#7D511F] text-white" : "bg-transparent text-white"
             }`}
-            onClick={() => setActiveTab("device")}
+            onClick={() => {setActiveTab("device")
+              showDevice("device");
+            }}
           >
             Device
           </button>

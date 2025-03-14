@@ -13,7 +13,7 @@ interface ActivityHistoryProps {
 
 const ActivityHistoryCard: React.FC<ActivityHistoryProps> = ({ title, activities }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedFilter, setSelectedFilter] = useState("Today");
+  const [selectedFilter, setSelectedFilter] = useState("All Time");
 
   const filterOptions = ["Today", "This Week", "This Month", "All Time"];
 
