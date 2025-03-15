@@ -45,9 +45,9 @@ export default function Dashboard() {
   return (
     <div className="relative min-h-screen text-white bg-irchad-gray-dark w-full overflow-x-hidden">
       {/* Background Image */}
-      <div className="absolute h-1/3 w-full rounded-b-lg overflow-hidden">
+      <div className="absolute h-1/4 w-full rounded-b-lg overflow-hidden">
         <Image
-          src="/images/login_image.png"
+          src="/images/headers/header.svg"
           alt="Background"
           layout="fill"
           objectFit="cover"
@@ -56,13 +56,13 @@ export default function Dashboard() {
           className="rounded-b-lg"
         />
         <div className="absolute top-1/2 left-10 transform -translate-y-1/2 text-white">
-          <h1 className="text-4xl font-bold drop-shadow-lg">Devices</h1>
-          <p className="text-lg drop-shadow-md">Where you manage your devices</p>
+          <h1 className="text-4xl font-bold drop-shadow-lg">Hello Admin !</h1>
+          <p className="text-lg drop-shadow-md">Discover what’s new in Irchad</p>
         </div>
       </div>
 
       {/* Content Wrapper */}
-      <div className="relative z-0 w-full mt-60">
+      <div className="relative z-0 w-full mt-40">
         <div className="w-full max-w-7xl mx-auto space-y-6 px-6">
           {/* Metric Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 ">
@@ -73,16 +73,14 @@ export default function Dashboard() {
 
           {/* Sales Chart & Notifications Container */}
           <div className="flex flex-col lg:flex-row gap-6 w-full">
-            {/* Notification Panel (Left) */}
-            <div className="w-full lg:w-1/3 bg-[#2E2E2E] p-6 rounded-xl shadow-lg">
-              <h2 className="text-white text-lg font-semibold mb-4">Notifications</h2>
-              <NotificationList notifications={notifications} />
-            </div>
-
-            {/* Sales & Cost Chart (Right) */}
             <div className="w-full lg:w-2/3 bg-[#2E2E2E] p-6 rounded-xl shadow-lg">
               <h2 className="text-white text-lg font-semibold mb-4">Sales & Cost Chart</h2>
               <SalesChart data={chartData} />
+            </div>
+
+            <div className="w-full lg:w-1/3 bg-[#2E2E2E] p-6 rounded-xl shadow-lg">
+              <h2 className="text-white text-lg font-semibold mb-4">Notifications</h2>
+              <NotificationList notifications={notifications} />
             </div>
           </div>
         </div>

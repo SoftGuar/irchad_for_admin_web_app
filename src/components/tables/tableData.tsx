@@ -1,5 +1,6 @@
 import { useRouter } from "next/navigation";
-import {Trash2, Filter, Pen, ArrowRight, Ban} from "lucide-react";
+import {Trash2, Filter, Pen, ArrowRight, Ban, Download} from "lucide-react";
+import Checkbox from "../shared/Checkbox";
 
 interface Column<T> {
   key: keyof T;
@@ -34,7 +35,7 @@ const TableData = <T,>({
           <div key={index} className={`flex w-1/5 justify-start items-center space-x-3`}>
             {column.key === "name" ? (
               <>
-                <input type="checkbox" className="w-[20px] h-[20px] rounded-md bg-irchad-gray border-[0.5px] border-irchad-gray-light cursor-pointer"/>
+                <Checkbox />
                 <p className="text-irchad-gray-light text-[16px] font-product-sans">{column.label}</p>
               </>
             ) : (
@@ -59,11 +60,15 @@ const TableData = <T,>({
               <div key={colIndex} className={`flex w-1/5 justify-start items-center`}>
                 {column.key === "name" ? (
                   <>
-                    <input type="checkbox" className="w-[20px] h-[20px] mr-2 rounded-md bg-irchad-gray border-[0.5px] border-irchad-gray-light cursor-pointer"/>
-                    <p className="text-irchad-gray-light text-[16px] font-product-sans">{String(item[column.key])}</p>
-                    </>
+                    <Checkbox />
+                    <p className="text-irchad-gray-light text-[16px] font-product-sans ml-1">
+                      {page === "environments" && (item[column.key] == null) ? "" : String(item[column.key] || "")}
+                    </p>
+                  </>
                 ) : (
-                  <p className="text-irchad-gray-light text-[16px] font-product-sans">{String(item[column.key])}</p>
+                  <p className="text-irchad-gray-light text-[16px] font-product-sans">
+                    {page === "environments" && (item[column.key] == null) ? "" : String(item[column.key] || "")}
+                  </p>
                 )}
               </div>
             ))}
@@ -72,6 +77,9 @@ const TableData = <T,>({
               {page === "devices" ? 
                 <Ban className="text-irchad-gray-light cursor-pointer" onClick={() => onEdit(item)}/>
                 : 
+                page === "environments" ? 
+                <Download className="text-irchad-gray-light cursor-pointer" onClick={() => onEdit(item)}/>
+                :
                 <Pen className="text-irchad-gray-light cursor-pointer" onClick={() => onEdit(item)}/>
               }
               <ArrowRight className="text-irchad-gray-light cursor-pointer" onClick={() => openDetails(item[columns[0].key])}/>

@@ -22,7 +22,7 @@ const AccountList: React.FC<DeviceListProps> = ({ title, devicesData }) => {
     const [deviceToDesactivate, setDeviceToDesactivate] = useState<Device | null>(null);
     const [devices, setdevices] = useState(devicesData);
 
-    const [selectedSort, setSelectedSort] = useState<string>("Name");
+    const [selectedSort, setSelectedSort] = useState<string>("ID");
     const sortingOptions = ["ID", "Adding date", "Last Edited"];
  
    const itemsPerPage = 10;
@@ -31,8 +31,8 @@ const AccountList: React.FC<DeviceListProps> = ({ title, devicesData }) => {
    const openAddUserPopup = () => setShowPopup("add");
  
    const openDeleteDevicePopup = (device: Device) => {
-     setDeviceToDesactivate(device);
-     setShowPopup("desactivate");
+     setDeviceToDelete(device);
+     setShowPopup("delete");
    };
  
    const openDesactivateDevicePopup = (device: Device) => {

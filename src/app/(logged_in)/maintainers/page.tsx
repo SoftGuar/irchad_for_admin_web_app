@@ -15,8 +15,12 @@ const maintainerAccounts = Array.from({ length: 95 }, (_, index) => ({
 const UserPage = () => {
   return (
     <div className="flex flex-col w-full min-h-screen pb-5">
-      <div className="flex w-full">
-        <Image src="/images/headers/maintainers_header.svg"  alt="maintainers header" width={1663} height={236}/>
+      <div className="flex relative w-full">
+        <Image src="/images/headers/header.svg"  alt="header" width={1663} height={236}/>
+        <div className="absolute inset-0 flex flex-col p-6 items-start justify-start text-white text-[35px] font-roboto-bold">
+          Maintenance
+          <p className="text-[20px] font-roboto-light">Where you manage your system maintenance personnel</p>
+        </div>
       </div>
 
       <div className="relative flex justify-center items-center w-full min-h-screen">

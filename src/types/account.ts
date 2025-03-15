@@ -1,8 +1,9 @@
 export interface Account {
-    id: number;
+    id: string;
     name: string;
     email: string;
     phone: string;
     addingDate: string;
     lastEdited: string;
+    previlegeLevel: string;
 }
