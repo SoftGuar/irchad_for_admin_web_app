@@ -43,7 +43,7 @@ const notifications = [
 
 export default function Dashboard() {
   return (
-    <div className="relative min-h-screen text-white bg-black w-full overflow-x-hidden">
+    <div className="relative min-h-screen text-white bg-irchad-gray-dark w-full overflow-x-hidden">
       {/* Background Image */}
       <div className="absolute h-1/3 w-full rounded-b-lg overflow-hidden">
         <Image
@@ -88,10 +88,5 @@ export default function Dashboard() {
         </div>
         </div>
       </div>
-    
   );
 }
- 
-
-          
-      
