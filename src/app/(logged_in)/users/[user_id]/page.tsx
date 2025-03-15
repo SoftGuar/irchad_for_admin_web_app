@@ -4,7 +4,7 @@ import UserInfoCard from "@/components/cards/UserInfoCard";
 import ActivityHistoryCard from "@/components/cards/ActivityHistoryCard";
 import ItemsList from "@/components/cards/ItemsList";
 import { useState } from "react";
-import DeviceInfoCard from "@/components/cards/DeviceInfoCard";
+import DeviceInfoCard from "@/components/cards/UserDeviceInfoCard";
 import EnvironmentCard from "@/components/cards/EnvironmentCard";
 
 
