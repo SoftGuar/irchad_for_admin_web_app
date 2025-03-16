@@ -3,8 +3,8 @@ import Image from "next/image";
 import EnvironmentList from "@/components/lists/EnvironmentList";
 
 //sample data
-const environmentsData = Array.from({ length: 95 }, (_, index) => ({
-    id: (index + 1).toString(),
+const environmentsData = Array.from({ length: 11 }, (_, index) => ({
+    id: `${index + 1}`,
     name: `Environment ${index+ 1}`,
     addingDate: "2021-08-01",
     lastEdited: "2021-08-01"
@@ -21,8 +21,8 @@ const EnvironmentPage = () => {
         </div>
       </div>
 
-      <div className="relative flex justify-center items-center w-full min-h-screen">
-        <div className="absolute top-full left-1/2 transform -translate-x-1/2 -translate-y-full w-[95%]">
+      <div className="flex -mt-10 justify-center items-start min-h-screen w-full z-0">
+        <div className="w-[95%]">
           <EnvironmentList title="Environment" environmentData={environmentsData} />
         </div>
       </div>

@@ -6,8 +6,7 @@ import ItemsList from "@/components/cards/ItemsList";
 import { useState } from "react";
 import DeviceInfoCard from "@/components/cards/UserDeviceInfoCard";
 import EnvironmentCard from "@/components/cards/EnvironmentCard";
-
-
+import Image from "next/image";
 
 const UserPage = () => {
 
@@ -31,14 +30,10 @@ const UserPage = () => {
         { message: "Updated profile information", timestamp: "2025-03-10 03:15 PM" },
         { message: "Changed password", timestamp: "2025-03-09 06:45 PM" },
         { message: "Updated profile information", timestamp: "2025-02-20 06:45 PM" },
-    
-    
-    
       ],
       EmergencyContacts :[
         {name:"Ahmed Kada", phoneNumber:"+213 735 64 46 32"},
         {name:"Aissa Saouli", phoneNumber:"+213 735 64 46 32"},
-
       ]
     }
   )
@@ -127,9 +122,13 @@ const UserPage = () => {
 
     return (
       <div className="p-0">
-        <div className="w-full rounded-lg">
-          <img src="/images/headers/users_header.svg" />
+      <div className="flex relative w-full">
+        <Image src="/images/headers/header.svg"  alt="header" width={1663} height={236}/>
+        <div className="absolute inset-0 flex flex-col p-6 items-start justify-start text-white text-[35px] font-roboto-bold">
+          Users
+          <p className="text-[20px] font-roboto-light">Where you manage your system users</p>
         </div>
+      </div>
 
       <UserHeaderBar user={user} onEdit={() => setIsEditing(true)} showDevice={(tab) => setActiveTab(tab)} />
       {activeTab === "personal" ?
@@ -166,8 +165,6 @@ const UserPage = () => {
         </div>
     </div>
       }
-
-
     </div>
     )
   }

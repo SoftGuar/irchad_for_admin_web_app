@@ -3,13 +3,14 @@ import Image from "next/image";
 import AccountList from "@/components/lists/AccountList";
 
 //sample data
-const decisionMakerAccounts = Array.from({ length: 95 }, (_, index) => ({
-  id: index + 1,
+const decisionMakerAccounts = Array.from({ length: 3 }, (_, index) => ({
+  id: `${index + 1}`,
   name: `Decision maker ${index + 1}`,
   email: `decisionmaker${index + 1}@gmail.com`,
   phone: `123-456-789${index}`,
   addingDate: `2024-12-${String((index % 31) + 1).padStart(2, "0")}`,
   lastEdited: `2024-12-${String((index % 31) + 1).padStart(2, "0")}`,
+  previlegeLevel: '1',
 }));
 
 const UserPage = () => {
@@ -23,8 +24,8 @@ const UserPage = () => {
         </div>
       </div>
 
-      <div className="relative flex justify-center items-center w-full min-h-screen">
-        <div className="absolute top-full left-1/2 transform -translate-x-1/2 -translate-y-full w-[95%]">
+      <div className="flex -mt-10 justify-center items-start min-h-screen w-full z-0">
+        <div className="w-[95%]">
           <AccountList title="Decision-maker" accountsData={decisionMakerAccounts} />
         </div>
       </div>

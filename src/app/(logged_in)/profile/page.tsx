@@ -4,9 +4,6 @@ import UserInfoCard from "@/components/cards/UserInfoCard";
 import ActivityHistoryCard from "@/components/cards/ActivityHistoryCard";
 import { useState } from "react";
 
-
-
-
 const UserPage = () => {
     const [user, setUser] = useState(
       {
@@ -28,9 +25,6 @@ const UserPage = () => {
           { message: "Updated profile information", timestamp: "2025-03-10 03:15 PM" },
           { message: "Changed password", timestamp: "2025-03-09 06:45 PM" },
           { message: "Updated profile information", timestamp: "2025-02-20 06:45 PM" },
-      
-      
-      
         ],
       }
     )

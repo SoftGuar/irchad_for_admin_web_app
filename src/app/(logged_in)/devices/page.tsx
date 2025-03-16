@@ -3,8 +3,8 @@ import Image from "next/image";
 import DeviceList from "@/components/lists/DeviceList";
 
 //sample data
-const devicesData = Array.from({ length: 95 }, (_, index) => ({
-  id: (index + 1).toString(),
+const devicesData = Array.from({ length: 50 }, (_, index) => ({
+  id: `${index + 1}`,
   type: "Type",
   mac: "00:00:00:00:00:00",
   status: "Active",
@@ -26,8 +26,8 @@ const DevicePage = () => {
         </div>
       </div>
 
-      <div className="relative flex justify-center items-center w-full min-h-screen">
-        <div className="absolute top-full left-1/2 transform -translate-x-1/2 -translate-y-full w-[95%]">
+      <div className="flex -mt-10 justify-center items-start min-h-screen w-full z-0">
+        <div className="w-[95%]">
           <DeviceList title="Device" devicesData={devicesData} />
         </div>
       </div>
