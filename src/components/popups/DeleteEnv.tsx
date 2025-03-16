@@ -1,16 +1,16 @@
 "use client";
 import { X } from "lucide-react";
-import { Account } from "@/types/account";
+import { Environment } from "@/types/environment";
 
-interface DeleteUserProps {
-    account: Account;
+interface DeleteEnvProps {
+    environment: Environment;
     closePopup: () => void;
 }
   
-const DeleteUser: React.FC<DeleteUserProps> = ({ account, closePopup }) => {
+const DeleteEnv: React.FC<DeleteEnvProps> = ({ environment, closePopup }) => {
   
     const handleDelete = () => {
-      console.log("deleted user:", account.name);
+      console.log("deleted user:", environment.name);
       closePopup();
     };
   
@@ -22,7 +22,7 @@ const DeleteUser: React.FC<DeleteUserProps> = ({ account, closePopup }) => {
 
         <p className="text-xl text-irchad-white font-roboto-bold">Do you confirm deleting this account?</p>
 
-        <p className="text-xl text-irchad-gray-light font-roboto">{account.name}</p>
+        <p className="text-xl text-irchad-gray-light font-roboto">{environment.name}</p>
 
         <div className="flex space-x-4">
           <button onClick={closePopup} className="bg-irchad-gray border border-irchad-orange text-irchad-orange font-roboto px-4 py-2 rounded-[10px] outline-none">
@@ -38,4 +38,4 @@ const DeleteUser: React.FC<DeleteUserProps> = ({ account, closePopup }) => {
 };
   
 
-export default DeleteUser;
+export default DeleteEnv;

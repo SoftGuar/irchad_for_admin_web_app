@@ -1,20 +1,11 @@
 "use client";
 import { useState } from "react";
 import { X } from "lucide-react";
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-  addingDate: string;
-  lastEdited: string;
-  previlegeLevel?: string;
-}
+import { Account } from "@/types/account";
   
 interface EditUserProps {
     type: string
-    user: User;
+    user: Account;
     closePopup: () => void;
 }
   
