@@ -25,7 +25,7 @@ const UserPage = () => {
 
       <div className="relative flex justify-center items-center w-full min-h-screen">
         <div className="absolute top-full left-1/2 transform -translate-x-1/2 -translate-y-full w-[95%]">
-          <AccountList title="Decision maker" accountsData={decisionMakerAccounts} />
+          <AccountList title="Decision-maker" accountsData={decisionMakerAccounts} />
         </div>
       </div>
     </div>
