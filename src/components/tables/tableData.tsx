@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {Trash2, Filter, Pen, ArrowRight, Ban, Download} from "lucide-react";
 import Checkbox from "../shared/Checkbox";
@@ -23,6 +24,23 @@ const TableData = <T,>({
   page 
 }: TableDataProps<T>) => {
   const router = useRouter();
+  const [checkedRows, setCheckedRows] = useState<boolean[]>(new Array(data.length).fill(false));
+  const [isHeaderChecked, setIsHeaderChecked] = useState(false);
+
+  const handleHeaderCheckboxChange = () => {
+    const newCheckedState = !isHeaderChecked;
+    setIsHeaderChecked(newCheckedState);
+    setCheckedRows(new Array(data.length).fill(newCheckedState));
+  };
+
+  const handleRowCheckboxChange = (index: number) => {
+    const newCheckedRows = [...checkedRows];
+    newCheckedRows[index] = !newCheckedRows[index];
+    setCheckedRows(newCheckedRows);
+
+    const allChecked = newCheckedRows.every((checked) => checked);
+    setIsHeaderChecked(allChecked);
+  };
 
   const openDetails = (id: any) => {
     router.push(`/${page}/${id}`);
@@ -30,12 +48,16 @@ const TableData = <T,>({
 
   return (
     <div className="flex flex-col w-full">
+      {/* header  */}
       <div className="flex relative justify-between  w-full px-5 py-2 bg-irchad-gray border-y border-irchad-gray-light">
         {columns.slice(1).map((column, index) => (
           <div key={index} className={`flex w-1/5 justify-start items-center space-x-3`}>
             {column.key === "name" ? (
               <>
-                <Checkbox />
+                <Checkbox
+                  checked={isHeaderChecked}
+                  onChange={handleHeaderCheckboxChange}
+                />
                 <p className="text-irchad-gray-light text-[16px] font-product-sans">{column.label}</p>
               </>
             ) : (
@@ -52,15 +74,18 @@ const TableData = <T,>({
           </div>
       </div>
 
+      {/* content */}
       <div className="flex flex-col w-full">
         {data.map((item, index) => (
-
           <div key={index} className="flex relative justify-center items-center w-full px-5 py-4 bg-irchad-gray-dark border-b border-irchad-gray-light">
             {columns.slice(1).map((column, colIndex) => (
               <div key={colIndex} className={`flex w-1/5 justify-start items-center`}>
                 {column.key === "name" ? (
                   <>
-                    <Checkbox />
+                    <Checkbox
+                      checked={checkedRows[index]}
+                      onChange={() => handleRowCheckboxChange(index)}
+                    />
                     <p className="text-irchad-gray-light text-[16px] font-product-sans ml-1">
                       {page === "environments" && (item[column.key] == null) ? "" : String(item[column.key] || "")}
                     </p>
