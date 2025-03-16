@@ -14,8 +14,7 @@ const Navbar = () => {
         <span>IRCHAD</span>
       </div>
 
-      {/* Search Bar */}
-      <div className="flex items-center bg-[#2E2E2E] px-3 py-2 rounded-md border-[#FF8B0029] border-1">
+      <div className="flex items-center bg-[#2E2E2E] px-3 py-2 rounded-md border border-irchad-orange/35">
         <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 " />
         <input type="text" placeholder="Search..." className="bg-transparent text-white placeholder-gray-500 focus:outline-none px-2" />
       </div>

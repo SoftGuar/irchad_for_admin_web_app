@@ -5,21 +5,19 @@ import { ChevronDown, ChevronRight, Users, LayoutGrid, Settings, MapPin } from "
 import Link from "next/link";
 
 const Sidebar = () => {
-  const [isAccountsOpen, setIsAccountsOpen] = useState(true);
-  const [selectedItem, setSelectedItem] = useState("users");
-  const [selectedMain, setSelectedMain] = useState("accounts"); // Track the selected main menu item
-
+  const [isAccountsOpen, setIsAccountsOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState("");
+  const [selectedMain, setSelectedMain] = useState("dashboard"); 
  
   const handleSubmenuClick = (item: string) => {
     setSelectedItem(item);
     setSelectedMain("accounts");  
   };
-
   
   const handleMainClick = (item: string) => {
     setSelectedItem(item);
     setSelectedMain(item);
-    setIsAccountsOpen(false); // Close accounts submenu when clicking a new main menu item
+    setIsAccountsOpen(false);
   };
 
   return (
