@@ -42,7 +42,7 @@ const UserPage = () => {
 
       <UserHeaderBar user={user} onEdit={() => setIsEditing(true)} />
 
-      <div className="mt-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="mt-6 grid grid-cols-1 lg:grid-cols-4 gap-6 px-7">
         <div className="lg:col-span-2">
           <UserInfoCard user={user} isEditing={isEditing} onSave={() => setIsEditing(false)} setUser={setUser} />
         </div>

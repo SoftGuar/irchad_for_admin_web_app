@@ -6,7 +6,7 @@ import DeviceImage from "@/components/cards/DeviceImageCard";
 import DeviceInfo from "@/components/cards/DeviceInfoCard";
 import MaintenanceHistory from "@/components/cards/MaintenanceHistoryCard";
 import SystemLogs from "@/components/cards/SystemLogsCard";
-import { DeviceData } from "@/components/cards/types";
+import { DeviceData } from "@/types/device";
 
 const devices: DeviceData[] = [
   {

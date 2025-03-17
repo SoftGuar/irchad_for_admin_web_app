@@ -26,13 +26,10 @@ const UserPage = () => {
       { message: "Updated profile information", timestamp: "2025-03-10 03:15 PM" },
       { message: "Changed password", timestamp: "2025-03-09 06:45 PM" },
       { message: "Updated profile information", timestamp: "2025-02-20 06:45 PM" },
-  
-  
-  
     ],
   })
-  const [isEditing, setIsEditing] = useState(false);
 
+  const [isEditing, setIsEditing] = useState(false);
 
     return (
       <div className="p-0">
@@ -42,7 +39,7 @@ const UserPage = () => {
 
       <UserHeaderBar user={user} onEdit={() => setIsEditing(true)}  />
 
-      <div className="mt-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="mt-6 grid grid-cols-1 lg:grid-cols-4 gap-6 px-7">
         <div className="lg:col-span-2">
           <UserInfoCard user={user} isEditing={isEditing} onSave={() => setIsEditing(false)} setUser={setUser}/>
         </div>
