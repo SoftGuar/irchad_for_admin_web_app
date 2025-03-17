@@ -1,4 +1,4 @@
-import { DeviceData } from "./types";
+import { DeviceData } from "@/types/device";
 
 interface Props {
   data: DeviceData;

@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
-import { DeviceData } from "./types";
 import AttachUserPopup from "../popups/AttachUserPopUp";
 import { Pen, Save } from "lucide-react";
+import { DeviceData } from "@/types/device";
 
 interface Props {
   data: DeviceData;
@@ -46,7 +46,7 @@ const DeviceInfo: React.FC<Props> = ({ data }) => {
         )}
       </div>
 
-      <div className="grid grid-cols-2 gap-y-3 text-white">
+      <div className="grid grid-cols-2 gap-y-3 text-white"> 
         <p className="font-semibold">Device ID</p>
         {isEditing ? (
           <input

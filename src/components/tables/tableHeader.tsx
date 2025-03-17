@@ -28,7 +28,7 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
     <div className="flex relative justify-start items-center w-full py-6 px-5 space-x-16">
       {/* Type and Item Count */}
       <div className="flex space-x-5 items-center">
-        <p className="font-product-sans font-semibold text-[16px] capitalize">
+        <p className="font-roboto-medium text-[16px] capitalize">
           {`${type}s`}
         </p>
         <div className="bg-[#2E2E2E] border border-[#FF8B00] px-4 py-1 rounded-2xl">

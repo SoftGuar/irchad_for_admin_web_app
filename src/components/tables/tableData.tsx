@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import {Trash2, Filter, Pen, ArrowRight, Ban, Download} from "lucide-react";
+import {Trash2, Filter, Pen, ArrowRight, Ban, Download, Link } from "lucide-react";
 import Checkbox from "../shared/Checkbox";
 
 interface Column<T> {
@@ -49,9 +49,9 @@ const TableData = <T,>({
   return (
     <div className="flex flex-col w-full">
       {/* header  */}
-      <div className="flex relative justify-between  w-full px-5 py-2 bg-irchad-gray border-y border-irchad-gray-light">
+      <div className="flex relative justify-between w-full px-5 py-2 bg-irchad-gray border-y border-irchad-gray-light">
         {columns.slice(1).map((column, index) => (
-          <div key={index} className={`flex w-1/5 justify-start items-center space-x-3`}>
+          <div key={index} className={`flex ${(page === "pois" || page === "zones") ? 'w-2/3' : 'w-1/5'} justify-start items-center space-x-3`}>
             {column.key === "name" ? (
               <>
                 <Checkbox
@@ -65,7 +65,7 @@ const TableData = <T,>({
             )}
           </div>
         ))}
-        <div className="flex w-1/12 justify-end items-center space-x-2">
+        <div className={`flex ${page === "pois" || page === "zones" ? 'w-1/3' : 'w-1/12'} justify-end items-center space-x-2`}>
             <Trash2 className="text-irchad-gray-light"/>
             <div className="flex space-x-3">
               <Filter className="text-irchad-gray-light"/>
@@ -79,7 +79,7 @@ const TableData = <T,>({
         {data.map((item, index) => (
           <div key={index} className="flex relative justify-center items-center w-full px-5 py-4 bg-irchad-gray-dark border-b border-irchad-gray-light">
             {columns.slice(1).map((column, colIndex) => (
-              <div key={colIndex} className={`flex w-1/5 justify-start items-center`}>
+              <div key={colIndex} className={`flex ${(page === "pois" || page === "zones") ? 'w-2/3' : 'w-1/5'} justify-start items-center`}>
                 {column.key === "name" ? (
                   <>
                     <Checkbox
@@ -97,17 +97,22 @@ const TableData = <T,>({
                 )}
               </div>
             ))}
-            <div className="flex w-1/12 justify-end items-center space-x-6">
-              <Trash2 className="text-irchad-gray-light cursor-pointer" onClick={() => onDelete(item)}/>
+            <div className={`flex ${page === "pois" || page === "zones" ? 'w-1/3' : 'w-1/12'} justify-end items-center space-x-6`}>
+              <Trash2 className="text-irchad-gray-light cursor-pointer w-5 h-5" onClick={() => onDelete(item)}/>
               {page === "devices" ? 
-                <Ban className="text-irchad-gray-light cursor-pointer" onClick={() => onEdit(item)}/>
+                <Ban className="text-irchad-gray-light cursor-pointer w-5 h-5" onClick={() => onEdit(item)}/>
                 : 
                 page === "environments" ? 
-                <Download className="text-irchad-gray-light cursor-pointer" onClick={() => onEdit(item)}/>
+                <Download className="text-irchad-gray-light cursor-pointer w-5 h-5" onClick={() => onEdit(item)}/>
                 :
-                <Pen className="text-irchad-gray-light cursor-pointer" onClick={() => onEdit(item)}/>
+                <Pen className="text-irchad-gray-light cursor-pointer w-5 h-5" onClick={() => onEdit(item)}/>
               }
-              <ArrowRight className="text-irchad-gray-light cursor-pointer" onClick={() => openDetails(item[columns[0].key])}/>
+              {page === "pois" ? 
+                <Link className="text-irchad-gray-light cursor-pointer w-5 h-5" onClick={() => onEdit(item)}/> 
+                : 
+                page !== "zones" &&
+                <ArrowRight className="text-irchad-gray-light cursor-pointer w-5 h-5" onClick={() => openDetails(item[columns[0].key])}/>
+              }
             </div>
           </div>
         ))}

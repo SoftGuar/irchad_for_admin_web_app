@@ -7,7 +7,12 @@ const environmentsData = Array.from({ length: 11 }, (_, index) => ({
     id: `${index + 1}`,
     name: `Environment ${index+ 1}`,
     addingDate: "2021-08-01",
-    lastEdited: "2021-08-01"
+    lastEdited: "2021-08-01",
+    address: "",
+    description: "",
+    history: [{message: "", timestamp: ""}],
+    type: "",
+    layers: 1
 }));
 
 const EnvironmentPage = () => {

@@ -38,21 +38,21 @@ const ActivityHistoryCard: React.FC<ActivityHistoryProps> = ({ title, activities
   };
 
   return (
-    <div className="bg-[#2E2E2E] lg:col-span-2 p-6 ml-4 mr-20 my-4 rounded-lg shadow-md text-[#D3D3D3]">
+    <div className="bg-irchad-gray lg:col-span-2 p-6 rounded-lg w-full shadow-md text-[#D3D3D3]">
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-semibold mb-4">{title}</h3>
 
         <div className="relative mb-4">
           <div
-            className="bg-[#2E2E2E] text-[#D3D3D3] text-sm outline-none cursor-pointer px-4 py-2 rounded-md border border-[#444] hover:bg-[#3A3A3A] flex items-center justify-between w-40"
+            className="bg-irchad-gray text-irchad-white text-sm outline-none cursor-pointer px-4 py-2 rounded-md border border-[#444] hover:bg-[#3A3A3A] flex items-center justify-between w-40"
             onClick={() => setIsOpen(!isOpen)}
           >
             {selectedFilter}
-            <ChevronDown size={16} className="text-[#D3D3D3] ml-2" />
+            <ChevronDown size={16} className="text-irchad-white ml-2" />
           </div>
 
           {isOpen && (
-            <div className="absolute left-0 mt-2 w-40 bg-[#2E2E2E] rounded-md shadow-lg border border-[#444]">
+            <div className="absolute left-0 mt-2 w-40 bg-irchad-gray rounded-md shadow-lg border border-[#444]">
               {filterOptions.map((option, index) => (
                 <div
                   key={index}
@@ -79,7 +79,7 @@ const ActivityHistoryCard: React.FC<ActivityHistoryProps> = ({ title, activities
           {getFilteredActivities().map((activity, index) => (
             <li key={index} className="relative flex items-center gap-4">
           
-              <div className="w-4 h-4 bg-[#2E2E2E] border-2 border-orange-500 rounded-full absolute top-1 left-[-12px] "></div>
+              <div className="w-4 h-4 bg-irchad-gray border-2 border-orange-500 rounded-full absolute top-1 left-[-12px] "></div>
 
             
               <div className="border-l-4 border-transparent pl-4">
