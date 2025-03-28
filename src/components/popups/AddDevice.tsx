@@ -1,12 +1,10 @@
-
 import { useState } from "react";
 import { X, Upload } from "lucide-react";
+import { deviceApi } from "@/services/deviceApi";
 
 interface AddDeviceProps {
   closePopup: () => void;
 }
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const AddDevice: React.FC<AddDeviceProps> = ({ closePopup }) => {
   const formatDate = (date: Date) => date.toISOString().split(".")[0] + "Z"; // Remove milliseconds
@@ -21,46 +19,43 @@ const AddDevice: React.FC<AddDeviceProps> = ({ closePopup }) => {
     product_id: 0,
   });
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "product_id" ? Number(value) : value, // Convert product_id to number
+      [name]: name === "product_id" ? Number(value) : value, // Convertir `product_id` en nombre
     }));
   };
 
   const handleSubmit = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        console.error("No token found, user may not be authenticated.");
-        return;
-      }
+    setLoading(true);
+    setError(null);
+    setSuccess(false);
 
+    try {
+      // Format du MAC
       const formattedData = {
         ...formData,
-        MAC: formData.MAC.replace(/-/g, ":"), // Ensure correct MAC format
+        MAC: formData.MAC.replace(/-/g, ":"),
+        name: formData.type, // Assuming 'type' can be used as 'name'
+        status: formData.state, // Assuming 'state' can be used as 'status'
       };
 
       console.log("Sending data:", JSON.stringify(formattedData, null, 2));
 
-      const response = await fetch(`${API_URL}/admin/dispositive/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(formattedData),
-      });
+      // Appel direct à deviceApi
+      await deviceApi.create(formattedData);
 
-      if (!response.ok) {
-        throw new Error(`Failed to add device. Status: ${response.status}`);
-      }
-
-      console.log("Device added successfully");
-      closePopup();
+      setSuccess(true);
+      setTimeout(closePopup, 1500); // Ferme la pop-up après 1.5s
     } catch (error) {
-      console.error("Error adding device:", error);
+      setError((error as Error).message || "Failed to add device.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -95,11 +90,15 @@ const AddDevice: React.FC<AddDeviceProps> = ({ closePopup }) => {
         </label>
       </div>
 
+      {error && <p className="text-red-500 text-sm">{error}</p>}
+      {success && <p className="text-green-500 text-sm">Device added successfully!</p>}
+
       <button
         onClick={handleSubmit}
         className="bg-irchad-orange text-irchad-gray-dark w-full px-4 py-3 mt-3 rounded-lg outline-none"
+        disabled={loading}
       >
-        Add Device
+        {loading ? "Adding..." : "Add Device"}
       </button>
     </div>
   );

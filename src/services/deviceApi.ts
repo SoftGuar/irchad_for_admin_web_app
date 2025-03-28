@@ -35,6 +35,9 @@ export const deviceApi = {
 
   block: async (id: number | string, blocked: boolean) => {
     return await apiService.patch(`/admin/dispositive/${id}/block`, { blocked });
+  },
+  assignUser: async (deviceId: string | number, userId: number) => {
+    return await apiService.patch(`/admin/dispositive/${deviceId}/assign-user`, { user_id: userId });
   }
 };
 

@@ -79,7 +79,8 @@ const api = axios.create({
   
     block: async (id: number | string, blocked: boolean) => {
       return await apiService.patch(`/admin/dispositive/${id}/block`, { blocked });
-    }
+    },
+   
   };
   
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -113,4 +114,5 @@ const api = axios.create({
     if (!response.ok) throw new Error("Failed to fetch warnings");
     return response.json();
   }
+
   

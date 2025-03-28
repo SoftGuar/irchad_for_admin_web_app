@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { XMarkIcon } from "@heroicons/react/24/solid";
-
+import { deviceApi } from "@/services/deviceApi";
 interface AttachUserModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -19,7 +19,7 @@ export default function AttachUserModal({ isOpen, onClose, deviceId }: AttachUse
     if (isOpen) {
       alert(`Device ID: ${deviceId}`);
     }
-  }, [isOpen, deviceId]); // Runs when modal opens
+  }, [isOpen, deviceId]);
 
   if (!isOpen) return null;
 
@@ -29,36 +29,13 @@ export default function AttachUserModal({ isOpen, onClose, deviceId }: AttachUse
     setError(null);
     setSuccess(false);
 
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
-    const token = localStorage.getItem("token");
-
-    if (!API_URL || !token) {
-      setError("Missing API URL or authentication token.");
-      setLoading(false);
-      return;
-    }
-
     try {
-      const response = await fetch(`${API_URL}/admin/dispositive/${deviceId}/assign-user`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ user_id: Number(userId) }),
-      });
-     
-      if (!response.ok) {
-      
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to attach user.");
-      }
-
+      await deviceApi.assignUser(deviceId, Number(userId));
       setSuccess(true);
-      setUserId(""); 
-      onClose(); 
+      setUserId("");
+      onClose();
     } catch (err) {
-      setError((err as Error).message);
+      setError((err as Error).message || "Failed to attach user.");
     } finally {
       setLoading(false);
     }
