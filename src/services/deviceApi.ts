@@ -1,16 +1,6 @@
+import { ApiResponse } from "./ApiResponse";
 import { apiService } from "./apiService";
-
-interface ApiResponse<T> {
-  success: boolean;
-  data: T;
-}
-
-interface Device {
-  id: number;
-  name: string;
-  type: string;
-  status: string;
-}
+import { Device } from "../types/device";
 
 export const deviceApi = {
   getAll: async (): Promise<ApiResponse<Device[]>> => {
