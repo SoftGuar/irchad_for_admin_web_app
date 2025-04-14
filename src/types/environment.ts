@@ -8,30 +8,45 @@ export interface Environment {
     description: string;
     addingDate: string;
     lastEdited: string;
+    // New fields for floor plan functionality
+    floorPlan?: {
+        image: string | null;
+        grid: GridCell[][] | null;
+        processedAt?: string;
+    };
 }
 
 export interface Zone {
     id: string,
-    type:string,
-    name:string,
-    width:number,
+    type: string,
+    name: string,
+    width: number,
     height: number,
     category: string,
-    image:string,
+    image: string,
 }
 
 export interface POI {
     id: string,
-    type:string,
-    name:string,
-    width:number,
+    type: string,
+    name: string,
+    width: number,
     height: number,
     category: string,
-    image:string,
+    image: string,
     zone?: string,
 }
 
 interface History {
-    message:string,
+    message: string,
     timestamp: string,
+}
+
+export type GridCell = 0 | 1;
+
+export interface PathResult {
+    path: [number, number][];
+    distance: number;
+    time: number;
+    instructions: string[];
 }

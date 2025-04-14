@@ -1,21 +1,44 @@
 "use client";
 import Image from "next/image";
 import EnvironmentList from "@/components/lists/EnvironmentList";
+import { useEffect, useState } from "react";
 
-//sample data
-const environmentsData = Array.from({ length: 11 }, (_, index) => ({
-    id: `${index + 1}`,
-    name: `Environment ${index+ 1}`,
-    addingDate: "2021-08-01",
-    lastEdited: "2021-08-01",
-    address: "",
-    description: "",
-    history: [{message: "", timestamp: ""}],
-    type: "",
-    layers: 1
-}));
 
 const EnvironmentPage = () => {
+
+  const [environmentsData, setEnvironmentsData] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchEnvironmentsData = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/floors");
+        const data = await response.json();
+        console.log("Fetched data:", data);
+
+        const transformedData = await data.map((item: any, index: number) => ({
+          id: item.id || `${index + 1}`,
+          name: item.name || `Environment ${index + 1}`,
+          addingDate: "2021-08-01", // Replace with actual adding date if available
+          lastEdited: "2021-08-01", // Replace with actual last edited date if available
+          address: "", // Replace with actual address if available
+          description: "", // Replace with actual description if available
+          history: [{ message: "", timestamp: "" }], // Replace with actual history if available
+          type: "", // Replace with actual type if available
+          layers: item.level || 1, // Use the level from the API response
+        }));
+        console.log("Transformed data:", transformedData); 
+
+        setEnvironmentsData(transformedData);
+      } catch (error) {
+        console.error("Error fetching environments data:", error);
+      }
+    };
+
+    fetchEnvironmentsData();
+  }, []);
+
+
+
   return (
     <div className="flex flex-col w-full min-h-screen pb-5">
       <div className="flex relative w-full">

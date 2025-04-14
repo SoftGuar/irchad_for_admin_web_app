@@ -28,7 +28,8 @@ const mockEnvironmentData: Environment = {
 
 function EnvironmentDetails() {
     const router = useRouter();
-    const { course_id } = useParams(); 
+    const { environment_id } = useParams(); 
+    mockEnvironmentData.id = environment_id as string;
 
     const [environment, setEnvironment] = useState<Environment | null>(null);
 
@@ -58,11 +59,11 @@ function EnvironmentDetails() {
           <div className="flex flex-row space-x-3">
             <div className="flex flex-col md:w-1/3 bg-irchad-gray rounded-md px-4 py-6 space-y-3">
               <p className="text-irchad-white font-roboto-medium">List of POIs</p>
-              <ZonePOIList title="POI" idEnv={mockEnvironmentData.id}/>
+              <ZonePOIList title="POI" type="poi" idEnv={"e881e6e1-ab83-418a-92e0-0eee18976b04"}/>
             </div>
             <div className="flex flex-col md:w-1/3 bg-irchad-gray rounded-md px-4 py-6 space-y-3">
               <p className="text-irchad-white font-roboto-medium">List of POIs</p>
-              <ZonePOIList title="Zone" idEnv={mockEnvironmentData.id}/>
+              <ZonePOIList title="Zone" type="zone" idEnv={"e881e6e1-ab83-418a-92e0-0eee18976b04"}/>
             </div>
             <div className="flex md:w-1/3">
               <ActivityHistoryCard title="History" activities={mockEnvironmentData.history}/>

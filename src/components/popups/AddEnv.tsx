@@ -1,75 +1,165 @@
-import { X, Upload } from "lucide-react";
+import { X } from "lucide-react";
+import { env } from "process";
+import { useState } from "react";
 
 interface AddUserProps {
-    closePopup: () => void;
+  closePopup: () => void;
 }
-  
+
 const AddEnv: React.FC<AddUserProps> = ({ closePopup }) => {
-    const handleSubmit = () => {
-      closePopup();
-    };
-  
-    return (
-      <div className="flex flex-col relative bg-irchad-gray-dark shadow-xl py-[30px] px-[45px] rounded-[30px] space-y-2 w-1/3">
-        <div className="absolute top-10 right-10">
-            <X className="cursor-pointer text-red-700" onClick={closePopup}/>
-        </div>        
+  const [formData, setFormData] = useState({
+    name: "",
+    environment_id: "",
+    level: 1,
+    description: "",
+    width: 0,
+    height: 0,
+    coordinates: "",
+    grid_data: "",
+    grid_dimensions: "",
+  });
 
-        <p className="text-xl text-irchad-white font-roboto-bold">Add Environment</p>
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
-        <div className="flex flex-col space-y-2 w-full">
-            <p className="text-[16px] text-irchad-gray-light font-roboto">Name</p>
-            <input
-                type="text"
-                className="border border-irchad-gray-light bg-irchad-gray rounded-lg p-4 text-[16px] text-irchad-gray-light font-roboto"
-            />
-        </div>
+  const handleSubmit = async () => {
+    try {
+      const body = {
+        ...formData,
+        environment_id: "env-123",//has to be changed later
+        coordinates: JSON.stringify({ points: JSON.parse(formData.coordinates) }),
+        grid_data: JSON.parse(formData.grid_data),
+        grid_dimensions: JSON.parse(formData.grid_dimensions),
+      };
 
-        <div className="flex flex-col space-y-2 w-full">
-            <p className="text-[16px] text-irchad-gray-light font-roboto">Address</p>
-            <input
-                type="text"
-                className="border border-irchad-gray-light bg-irchad-gray rounded-lg p-4 text-[16px] text-irchad-gray-light font-roboto"
-            />
-        </div>
+      const response = await fetch("http://localhost:8000/floors", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
 
-        <div className="flex flex-col space-y-2 w-full">
-            <p className="text-[16px] text-irchad-gray-light font-roboto">Type</p>
-            <input
-                type="text"
-                className="border border-irchad-gray-light bg-irchad-gray rounded-lg p-4 text-[16px] text-irchad-gray-light font-roboto"
-            />
-        </div>
+      if (response.ok) {
+        console.log("Environment added successfully");
+        closePopup();
+      } else {
+        console.error("Failed to add environment");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
+  };
 
-        <div className="flex flex-col space-y-2 w-full">
-            <p className="text-[16px] text-irchad-gray-light font-roboto">Description</p>
-            <input
-                type="text"
-                className="border border-irchad-gray-light bg-irchad-gray rounded-lg p-4 text-[16px] text-irchad-gray-light font-roboto"
-            />
-        </div>
-
-        <div className="flex flex-col space-y-2 w-full">
-            <p className="text-[16px] text-irchad-gray-light font-roboto">Map (.png, .jpeg ..)</p>
-            <label className="relative w-full cursor-pointer">
-                <input
-                    type="file"
-                    className="hidden"
-                />
-                <div className="border border-irchad-gray-light bg-irchad-gray rounded-lg p-4 text-[16px] text-irchad-gray-light font-roboto w-full flex items-center justify-end">
-                    <Upload className="text-irchad-gray-light" size={20} />
-                </div>
-            </label>
-        </div>
-
-        <div className="flex w-full">
-          <button onClick={handleSubmit} className="bg-irchad-orange text-irchad-gray-dark w-full px-4 py-3 mt-3 rounded-lg outline-none">
-            Add Environment
-          </button>
-        </div>
+  return (
+    <div
+      className="flex flex-col relative bg-irchad-gray-dark shadow-xl py-[30px] px-[45px] rounded-[30px] w-1/3 max-h-[80vh] overflow-y-auto"
+    >
+      <div className="absolute top-10 right-10">
+        <X className="cursor-pointer text-red-700" onClick={closePopup} />
       </div>
-    );
+
+      <p className="text-xl text-irchad-white font-roboto-bold">Add Environment</p>
+
+      <div className="flex flex-col space-y-2 w-full">
+        <p className="text-[16px] text-irchad-gray-light font-roboto">Name</p>
+        <input
+          type="text"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          className="border border-irchad-gray-light bg-irchad-gray rounded-lg p-4 text-[16px] text-irchad-gray-light font-roboto"
+        />
+      </div>
+
+      <div className="flex flex-col space-y-2 w-full">
+        <p className="text-[16px] text-irchad-gray-light font-roboto">Level</p>
+        <input
+          type="number"
+          name="level"
+          value={formData.level}
+          onChange={handleChange}
+          className="border border-irchad-gray-light bg-irchad-gray rounded-lg p-4 text-[16px] text-irchad-gray-light font-roboto"
+        />
+      </div>
+
+      <div className="flex flex-col space-y-2 w-full">
+        <p className="text-[16px] text-irchad-gray-light font-roboto">Description</p>
+        <textarea
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
+          className="border border-irchad-gray-light bg-irchad-gray rounded-lg p-4 text-[16px] text-irchad-gray-light font-roboto"
+        />
+      </div>
+
+      <div className="flex flex-col space-y-2 w-full">
+        <p className="text-[16px] text-irchad-gray-light font-roboto">Width</p>
+        <input
+          type="number"
+          name="width"
+          value={formData.width}
+          onChange={handleChange}
+          className="border border-irchad-gray-light bg-irchad-gray rounded-lg p-4 text-[16px] text-irchad-gray-light font-roboto"
+        />
+      </div>
+
+      <div className="flex flex-col space-y-2 w-full">
+        <p className="text-[16px] text-irchad-gray-light font-roboto">Height</p>
+        <input
+          type="number"
+          name="height"
+          value={formData.height}
+          onChange={handleChange}
+          className="border border-irchad-gray-light bg-irchad-gray rounded-lg p-4 text-[16px] text-irchad-gray-light font-roboto"
+        />
+      </div>
+
+      <div className="flex flex-col space-y-2 w-full">
+        <p className="text-[16px] text-irchad-gray-light font-roboto">Coordinates (JSON format)</p>
+        <textarea
+          name="coordinates"
+          value={formData.coordinates}
+          onChange={handleChange}
+          className="border border-irchad-gray-light bg-irchad-gray rounded-lg p-4 text-[16px] text-irchad-gray-light font-roboto"
+        />
+      </div>
+
+      <div className="flex flex-col space-y-2 w-full">
+        <p className="text-[16px] text-irchad-gray-light font-roboto">Grid Data (JSON format)</p>
+        <textarea
+          name="grid_data"
+          value={formData.grid_data}
+          onChange={handleChange}
+          className="border border-irchad-gray-light bg-irchad-gray rounded-lg p-4 text-[16px] text-irchad-gray-light font-roboto"
+        />
+      </div>
+
+      <div className="flex flex-col space-y-2 w-full">
+        <p className="text-[16px] text-irchad-gray-light font-roboto">Grid Dimensions (JSON format)</p>
+        <textarea
+          name="grid_dimensions"
+          value={formData.grid_dimensions}
+          onChange={handleChange}
+          className="border border-irchad-gray-light bg-irchad-gray rounded-lg p-4 text-[16px] text-irchad-gray-light font-roboto"
+        />
+      </div>
+
+      <div className="flex w-full">
+        <button
+          onClick={handleSubmit}
+          className="bg-irchad-orange text-irchad-gray-dark w-full px-4 py-3 mt-3 rounded-lg outline-none"
+        >
+          Add Environment
+        </button>
+      </div>
+    </div>
+  );
 };
-  
+
 export default AddEnv;
-  

@@ -3,7 +3,7 @@ import PopUpScreen from "@/components/popups/popUpScreen";
 import HeaderSection from "@/components/tables/tableHeader";
 import Pagination from "@/components/tables/paginationComponent";
 import TableData from "@/components/tables/tableData";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Environment } from "@/types/environment";
 import AddEnv from "@/components/popups/AddEnv";
 import DeleteEnv from "@/components/popups/DeleteEnv";
@@ -25,6 +25,12 @@ const AccountList: React.FC<EnvListProps> = ({ title, environmentData }) => {
  
    const itemsPerPage = 10;
    const totalPages = Math.ceil(environmentData.length / itemsPerPage);
+
+   // Synchronize environments state with environmentData prop
+  useEffect(() => {
+    setenvironments(environmentData);
+  }, [environmentData]);
+
  
    const openAddUserPopup = () => setShowPopup("add");
  

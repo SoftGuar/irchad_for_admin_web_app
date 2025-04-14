@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PopUpScreen from "@/components/popups/popUpScreen";
 import TableData from "@/components/tables/tableData";
 import { POI, Zone } from "@/types/environment";
@@ -7,13 +7,69 @@ import { POI, Zone } from "@/types/environment";
 interface AccountListProps {
   title: string;
   idEnv: string;
+  type?: "zone" | "poi";
 }
 
-const ZonePOIList: React.FC<AccountListProps> = ({ title, idEnv }) => {
+const ZonePOIList: React.FC<AccountListProps> = ({ title, idEnv,type }) => {
   const [showPopup, setShowPopup] = useState<"edit" | "delete" | null>(null);
   const [elementToEdit, setElementToEdit] = useState<POI | Zone | null>(null);
   const [elementToDelete, setElementToDelete] = useState<POI | Zone | null>(null);
   const [elements, setElements] = useState<POI[] | Zone[]>(poisData);
+
+  useEffect(() => {
+    const fetchZoneData = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:8000/zones/floor/e881e6e1-ab83-418a-92e0-0eee18976b04"
+        );
+        const data = await response.json();
+        console.log("Fetched data:", data);
+        const transformedData: POI[] = data.map((item: any, index: number) => ({
+          id: `poi-${index + 1}`,
+          type: item.type_id || "Unknown", // Default to "Unknown" if type_id is missing
+          name: item.name,
+          width: item.shape[0]?.type === "polygon" ? item.shape[0].coordinates[0][1][0] - item.shape[0].coordinates[0][0][0] : 0,
+          height: item.shape[0]?.type === "polygon" ? item.shape[0].coordinates[0][2][1] - item.shape[0].coordinates[0][0][1] : 0,
+          category: "Default Category", // Replace with actual category if available
+          image: "default-image.jpg", // Replace with actual image if available
+          zone: item.floor_id,
+        }));
+        setElements(transformedData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    const fetchPOIData = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:8000/pois/floor/e881e6e1-ab83-418a-92e0-0eee18976b04"
+        );
+        const data = await response.json();
+        const transformedData: POI[] = data.map((item: any, index: number) => ({
+          id: `poi-${index + 1}`,
+          type: "Default Type", // Replace with actual type if available
+          name: item.name,
+          width: 0, // Replace with actual width if available
+          height: 0, // Replace with actual height if available
+          category: "Default Category", // Replace with actual category if available
+          image: "default-image.jpg", // Replace with actual image if available
+          zone: item.point_id || "Unknown Zone", // Replace with actual zone if available
+        }));
+        setElements(transformedData);
+      } catch (error) {
+        console.error("Error fetching POI data:", error);
+      }
+    };
+
+    if (type === "zone") {
+      fetchZoneData();
+    }
+    else if (type === "poi") {
+      fetchPOIData();
+    }
+
+  }, []);
 
   const openEditAccountPopup = (element: Zone | POI) => {
     setElementToEdit(element);
