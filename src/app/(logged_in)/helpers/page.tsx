@@ -8,40 +8,40 @@ import { User } from "@/types/user";
 
 
 const UserPage = () => {
-    const [maintainerAccounts, setMaintainerAccounts] = useState([]);
+    const [helperAccounts, setHelperAccounts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string|null>(null)
-  
+ 
     const fetchUsers = async () => {
-      try {
-        setLoading(true)
-        const response = await getUsers("maintainer"); 
-        if(response.success){
-          const users = response.data;
-          const displayData = users.map((user:User) => ({
-            id: user.id.toString(),
-            name: `${user.first_name} ${user.last_name}`.trim(),
-            firstName: user.first_name,
-            lastName: user.last_name,
-            email: user.email,
-            phone: user.phone,
-            addingDate: new Date().toISOString().split('T')[0], 
-            lastEdited: new Date().toISOString().split('T')[0]
-          }));
-          setMaintainerAccounts(displayData); 
-        }else {
-          setError('Failed to fetch maintainers');
+        try {
+          setLoading(true)
+          const response = await getUsers("helper"); 
+          if(response.success){
+            const users = response.data;
+            const displayData = users.map((user:User) => ({
+              id: user.id.toString(),
+              name: `${user.first_name} ${user.last_name}`.trim(),
+              firstName: user.first_name,
+              lastName: user.last_name,
+              email: user.email,
+              phone: user.phone,
+              addingDate: new Date().toISOString().split('T')[0], 
+              lastEdited: new Date().toISOString().split('T')[0]
+            }));
+            setHelperAccounts(displayData); 
+          }else {
+            setError('Failed to fetch helpers');
+          }
+  
+        } catch (error) {
+          setError('An error occurred while fetching helpers');
+          console.error("Failed to fetch helpers:", error);
+        } finally {
+          setLoading(false);
         }
+      };
 
-      } catch (error) {
-        setError('An error occurred while fetching maintainers');
-        console.error("Failed to fetch maintainers:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    useEffect(() => { 
+    useEffect(() => {
       fetchUsers();
     }, []);
   
@@ -69,14 +69,14 @@ const UserPage = () => {
       <div className="flex relative w-full">
         <Image src="/images/headers/header.svg"  alt="header" width={1663} height={236}/>
         <div className="absolute inset-0 flex flex-col p-6 items-start justify-start text-white text-[35px] font-roboto-bold">
-          Maintenance
-          <p className="text-[20px] font-roboto-light">Where you manage your system maintenance personnel</p>
+          Helpers
+          <p className="text-[20px] font-roboto-light">Where you manage your system's helpers</p>
         </div>
       </div>
 
       <div className="flex -mt-10 justify-center items-start min-h-screen w-full z-0">
         <div className="w-[95%]">
-          <AccountList title="Maintainer" accountsData={maintainerAccounts} onChange={fetchUsers} />
+          <AccountList title="Helper" accountsData={helperAccounts} onChange={fetchUsers}/>
         </div>
       </div>
     </div>

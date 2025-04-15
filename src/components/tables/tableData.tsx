@@ -79,23 +79,38 @@ const TableData = <T,>({
         {data.map((item, index) => (
           <div key={index} className="flex relative justify-center items-center w-full px-5 py-4 bg-irchad-gray-dark border-b border-irchad-gray-light">
             {columns.slice(1).map((column, colIndex) => (
-              <div key={colIndex} className={`flex ${(page === "pois" || page === "zones") ? 'w-2/3' : 'w-1/5'} justify-start items-center`}>
-                {column.key === "name" ? (
-                  <>
-                    <Checkbox
-                      checked={checkedRows[index]}
-                      onChange={() => handleRowCheckboxChange(index)}
-                    />
-                    <p className="text-irchad-gray-light text-[16px] font-product-sans ml-1">
-                      {page === "environments" && (item[column.key] == null) ? "" : String(item[column.key] || "")}
-                    </p>
-                  </>
-                ) : (
-                  <p className="text-irchad-gray-light text-[16px] font-product-sans">
+              <div
+              key={colIndex}
+              className={`flex ${(page === "pois" || page === "zones") ? 'w-2/3' : 'w-1/5'} justify-start items-center`}
+            >
+              {column.key === "name" || column.key === "clientName" ? (
+                <>
+                  <Checkbox
+                    checked={checkedRows[index]}
+                    onChange={() => handleRowCheckboxChange(index)}
+                  />
+                  <p className="text-irchad-gray-light text-[16px] font-product-sans ml-1 truncate">
                     {page === "environments" && (item[column.key] == null) ? "" : String(item[column.key] || "")}
                   </p>
-                )}
-              </div>
+                </>
+              ) : page === "transactions" && column.key === "status" ? (
+                item[column.key] === "pending" ? (
+                  <button
+                    className="px-3 py-1 bg-[#FF8B00] text-white rounded-md text-sm"
+                  
+                  >
+                    Confirm
+                  </button>
+                ) : (
+                  <p className="text-irchad-gray-light text-[16px] font-product-sans">Confirmed</p>
+                )
+              ) : (
+                <p className="text-irchad-gray-light text-[16px] font-product-sans truncate">
+                  {page === "environments" && (item[column.key] == null) ? "" : String(item[column.key] || "")}
+                </p>
+              )}
+            </div>
+            
             ))}
             <div className={`flex ${page === "pois" || page === "zones" ? 'w-1/3' : 'w-1/12'} justify-end items-center space-x-6`}>
               <Trash2 className="text-irchad-gray-light cursor-pointer w-5 h-5" onClick={() => onDelete(item)}/>
@@ -110,7 +125,7 @@ const TableData = <T,>({
               {page === "pois" ? 
                 <Link className="text-irchad-gray-light cursor-pointer w-5 h-5" onClick={() => onEdit(item)}/> 
                 : 
-                page !== "zones" &&
+                page !== "zones" && page !== "transactions" &&
                 <ArrowRight className="text-irchad-gray-light cursor-pointer w-5 h-5" onClick={() => openDetails(item[columns[0].key])}/>
               }
             </div>

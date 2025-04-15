@@ -2,15 +2,45 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
+import { login } from '@/services/authService';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-  const handleSubmit = (e: { preventDefault: () => void; }) => {
-    e.preventDefault();
-    console.log({ email, password });
-  };
+const handleSubmit = async (e: { preventDefault: () => void }) => {
+  e.preventDefault();
+  setError(""); 
+
+  try {
+    setLoading(true);
+    const data = await login(email, password, "admin");
+    setLoading(false);
+    if (!data) {
+      setError("No response received from the server.");
+    }
+
+    if (data.success) {
+      // Store the token 
+      localStorage.setItem("token", data.data.token);
+      router.push("/");
+    }else{
+      // If the backend sends an error message, display it
+      setError(data.message || "Login failed. Please try again.");
+    }
+
+  } catch (err: any) {
+    // Server responded with an error
+    setError("An error occured when signing in.");
+          
+    }
+ 
+  }
+
 
   return (
     <div className="flex h-screen w-screen overflow-hidden">
@@ -54,8 +84,13 @@ export default function LoginPage() {
               <a href="#" className="text-orange-500 text-sm">Forgot Password?</a>
             </div>
             <button type="submit" className="w-full bg-[#FF8B00] p-3 rounded-lg font-semibold text-black">
-              Sign in
+            {loading ? `Please wait...` : 'Sign In'}
             </button>
+            {error !== "" && 
+              <p className='text-center mt-4 text-sm text-red-500 bg-red-100 bg-opacity-10 border border-red-500 px-4 py-2 rounded-lg animate-shake'>
+                {error}
+              </p>
+              }
           </form>
         </div>
       </div>

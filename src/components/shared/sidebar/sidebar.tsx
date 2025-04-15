@@ -1,7 +1,7 @@
 "use client"; // Ensure this is a Client Component
 
 import { useState } from "react";
-import { ChevronDown, ChevronRight, Users, LayoutGrid, Settings, MapPin } from "lucide-react";
+import { ChevronDown, ChevronRight, Users, LayoutGrid, Settings, MapPin, Repeat } from "lucide-react";
 import Link from "next/link";
 
 const Sidebar = () => {
@@ -65,7 +65,7 @@ const Sidebar = () => {
         {/* Sub-menu */}
         {isAccountsOpen && (
           <div className="ml-6 mt-1 space-y-1">
-            {["users", "admins", "maintainers", "commercials", "decision-makers"].map((item) => (
+            {["users", "admins", "maintainers", "helpers", "commercials", "decision-makers"].map((item) => (
               <Link
                 key={item}
                 href={`/${item}`}
@@ -102,6 +102,18 @@ const Sidebar = () => {
         >
           <MapPin className="w-5 h-5" />
           <span>Environments</span>
+        </Link>
+
+          {/* Transactions Section */}
+          <Link
+          href="/transactions"
+          className={`flex items-center gap-2 px-3 py-2 text-sm rounded-md ${
+            selectedMain === "transactions" ? "bg-[#FF8B00]/[0.64]" : "text-gray-300 hover:text-white"
+          }`}
+          onClick={() => handleMainClick("transactions")}
+        >
+          <Repeat className="w-5 h-5" />
+          <span>Transactions</span>
         </Link>
       </nav>
     </div>
