@@ -12,6 +12,7 @@
     "@heroicons/react": "^2.2.0",
     "dayjs": "^1.11.13",
     "framer-motion": "^12.4.10",
+    "irchad_for_admin_web_app": "file:",
     "lucide-react": "^0.479.0",
     "next": "^15.2.2",
     "rc-progress": "^4.0.0",
