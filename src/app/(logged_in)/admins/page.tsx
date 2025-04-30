@@ -23,12 +23,13 @@ const UserPage = () => {
           lastName: user.last_name,
           email: user.email,
           phone: user.phone,
-          addingDate: new Date().toISOString().split('T')[0], 
-          lastEdited: new Date().toISOString().split('T')[0]
+          previlegeLevel: user.privilege,
+          addingDate: user?.created_at ? user.created_at.split('T')[0] : new Date().toISOString().split('T')[0],
+          lastEdited: user?.updated_at ? user.updated_at.split('T')[0] : new Date().toISOString().split('T')[0],          
         }));
         setAdminAccounts(displayData); 
       }else {
-        setError('Failed to fetch admins');
+        setError(response?.message || 'Failed to fetch admins');
       }
 
     } catch (error) {

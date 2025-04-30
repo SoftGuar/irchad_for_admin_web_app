@@ -23,12 +23,12 @@ const UserPage = () => {
           lastName: user.last_name,
           email: user.email,
           phone: user.phone,
-          addingDate: new Date().toISOString().split('T')[0], 
-          lastEdited: new Date().toISOString().split('T')[0]
+          addingDate: user.created_at.split('T')[0], 
+          lastEdited: user.updated_at.split('T')[0]
         }));
         setDecisionMakerAccounts(displayData); 
       }else {
-        setError('Failed to fetch decision makers');
+        setError(response?.message || 'Failed to fetch decision makers');
       }
 
     } catch (error) {

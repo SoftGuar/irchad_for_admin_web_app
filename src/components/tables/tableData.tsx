@@ -2,10 +2,17 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {Trash2, Filter, Pen, ArrowRight, Ban, Download, Link } from "lucide-react";
 import Checkbox from "../shared/Checkbox";
+import PopUpScreen from "../popups/popUpScreen";
+import ConfirmTransaction from "../popups/ConfirmTransaction";
 
 interface Column<T> {
   key: keyof T;
   label: string;
+}
+
+interface BaseTransaction {
+  id: string;
+  dispositifID: string;
 }
 
 interface TableDataProps<T> {
@@ -26,6 +33,24 @@ const TableData = <T,>({
   const router = useRouter();
   const [checkedRows, setCheckedRows] = useState<boolean[]>(new Array(data.length).fill(false));
   const [isHeaderChecked, setIsHeaderChecked] = useState(false);
+  const [showPopup, setShowPopup] = useState<"confirm" | null>(null);
+  const [transIdToConfirm, setTransIdToConfirm] = useState<string | null>(null);
+  const [dispIdToConfirm, setDispIdToConfirm] = useState<string | null>(null);
+
+  
+
+
+    const openConfirmTransactionPopup = (transaction_id: string, dispositive_id: string) => {
+      setTransIdToConfirm(transaction_id);
+      setDispIdToConfirm(dispositive_id);
+      setShowPopup("confirm");
+    };
+
+    const closePopup = () => {
+      setShowPopup(null);
+      setTransIdToConfirm(null);
+      setDispIdToConfirm(null);
+    };
 
   const handleHeaderCheckboxChange = () => {
     const newCheckedState = !isHeaderChecked;
@@ -94,9 +119,14 @@ const TableData = <T,>({
                   </p>
                 </>
               ) : page === "transactions" && column.key === "status" ? (
-                item[column.key] === "pending" ? (
+                item[column.key] === false ? (
                   <button
                     className="px-3 py-1 bg-[#FF8B00] text-white rounded-md text-sm"
+                    onClick={() => {
+                      const itemTyped = item as { id: string; dispositifID: string };
+                      openConfirmTransactionPopup(itemTyped.id, itemTyped.dispositifID);
+                    }}
+
                   
                   >
                     Confirm
@@ -120,7 +150,9 @@ const TableData = <T,>({
                 page === "environments" ? 
                 <Download className="text-irchad-gray-light cursor-pointer w-5 h-5" onClick={() => onEdit(item)}/>
                 :
+                page !== "transactions" ?
                 <Pen className="text-irchad-gray-light cursor-pointer w-5 h-5" onClick={() => onEdit(item)}/>
+              : null
               }
               {page === "pois" ? 
                 <Link className="text-irchad-gray-light cursor-pointer w-5 h-5" onClick={() => onEdit(item)}/> 
@@ -132,6 +164,11 @@ const TableData = <T,>({
           </div>
         ))}
       </div>
+      {showPopup && (
+        <PopUpScreen>
+          {showPopup === "confirm" && transIdToConfirm && dispIdToConfirm && <ConfirmTransaction  transaction_id={transIdToConfirm} dispositive_id={dispIdToConfirm} closePopup={closePopup}/>}
+        </PopUpScreen>
+      )}
     </div>
   );
 };

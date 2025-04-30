@@ -12,9 +12,10 @@ import { Transaction } from "@/types/transaction";
 interface TransactionListProps {
   title: string;
   transactionsData: Transaction[];
+  onChange: ()=>void
 }
 
-const TransactionsList: React.FC<TransactionListProps> = ({ title, transactionsData }) => {
+const TransactionsList: React.FC<TransactionListProps> = ({ title, transactionsData, onChange }) => {
   const [searchValue, setSearchValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [showPopup, setShowPopup] = useState<"add" | "edit" | "delete" | null>(null);
@@ -113,9 +114,9 @@ const TransactionsList: React.FC<TransactionListProps> = ({ title, transactionsD
 
       {showPopup && (
         <PopUpScreen>
-          {showPopup === "add" && <AddTransaction closePopup={closePopup} />}
-          {showPopup === "edit" && transactionToEdit && <EditTransaction transaction={transactionToEdit}  closePopup={closePopup} />}
-          {showPopup === "delete" && transactionToDelete && <DeleteTransaction  transaction={transactionToDelete} closePopup={closePopup} />}
+          {showPopup === "add" && <AddTransaction closePopup={closePopup} onChange={onChange}/>}
+          {showPopup === "edit" && transactionToEdit && <EditTransaction transaction={transactionToEdit}  closePopup={closePopup} onChange={onChange}/>}
+          {showPopup === "delete" && transactionToDelete && <DeleteTransaction  transaction={transactionToDelete} closePopup={closePopup} onChange={onChange}/>}
         </PopUpScreen>
       )}
     </div>

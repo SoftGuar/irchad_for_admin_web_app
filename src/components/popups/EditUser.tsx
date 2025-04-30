@@ -27,6 +27,10 @@ const EditUser: React.FC<EditUserProps> = ({ type, user, closePopup, onChange })
             email: editedUser.email
           };
 
+          if (type.toLocaleLowerCase() === "admin"){
+            payload.privilege = editedUser.previlegeLevel
+          }
+
           if (password.trim() !== '') {
             payload.password = password;
           }

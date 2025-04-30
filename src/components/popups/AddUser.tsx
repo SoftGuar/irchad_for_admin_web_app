@@ -17,6 +17,8 @@ const AddUser: React.FC<AddUserProps> = ({ type, closePopup, onChange }) => {
         password: "",
         phoneNumber: "",
         email: "",
+        MAC: "",
+        privilege: ""
       });
 
     
@@ -33,6 +35,14 @@ const AddUser: React.FC<AddUserProps> = ({ type, closePopup, onChange }) => {
             phone: formData.phoneNumber,
             email: formData.email
           };
+
+          if (type.toLowerCase() === "user") {
+            payload.MAC = formData.MAC;
+          }
+
+          if (type.toLowerCase() === "admin") {
+            payload.privilege = formData.privilege;
+          }
 
           setLoading(true);
           let requestType: string;
@@ -52,12 +62,12 @@ const AddUser: React.FC<AddUserProps> = ({ type, closePopup, onChange }) => {
             onChange();
           }else{
              setLoading(false);
-             setError(`Failed to add user ${type}`)
+             setError(response.message || `Failed to add ${type}`)
           }
 
         } catch (error) {
-          setError(`Failed to add user ${type}`)
-          console.error(`Failed to add user ${type}: `, error);
+          setError(`Failed to add ${type}`)
+          console.error(`Failed to add ${type}: `, error);
         }
       };
   
@@ -99,17 +109,6 @@ const AddUser: React.FC<AddUserProps> = ({ type, closePopup, onChange }) => {
             />
         </div>
 
-        {type === "Admin" && (
-            <div className="flex flex-col space-y-2 w-full">
-                <p className="text-[16px] text-irchad-gray-light font-roboto">Privilege level</p>
-                <input
-                    type="text"
-                    value={formData.lastName}
-                    onChange={(e) => handleChange("firstName", e.target.value)}
-                    className="border border-irchad-gray-light bg-irchad-gray rounded-lg p-4 text-[16px] text-irchad-gray-light font-roboto"
-                />
-            </div>
-        )}
 
         <div className="flex flex-col space-y-2 w-full">
             <p className="text-[16px] text-irchad-gray-light font-roboto">Phone number</p>
@@ -130,6 +129,34 @@ const AddUser: React.FC<AddUserProps> = ({ type, closePopup, onChange }) => {
                 className="border border-irchad-gray-light bg-irchad-gray rounded-lg p-4 text-[16px] text-irchad-gray-light font-roboto"
             />
         </div>
+        {type.toLowerCase() === "user" && (
+          <div className="flex flex-col space-y-2 w-full">
+          <p className="text-[16px] text-irchad-gray-light font-roboto">MAC Address</p>
+          <input
+              type="text"
+              value={formData.MAC}
+              onChange={(e) => handleChange("MAC", e.target.value)}
+              className="border border-irchad-gray-light bg-irchad-gray rounded-lg p-4 text-[16px] text-irchad-gray-light font-roboto"
+          />
+      </div>
+        )
+        
+        }
+        
+
+        {type.toLowerCase() === "admin" && (
+          <div className="flex flex-col space-y-2 w-full">
+          <p className="text-[16px] text-irchad-gray-light font-roboto">Privilege</p>
+          <input
+              type="text"
+              value={formData.privilege}
+              onChange={(e) => handleChange("privilege", e.target.value)}
+              className="border border-irchad-gray-light bg-irchad-gray rounded-lg p-4 text-[16px] text-irchad-gray-light font-roboto"
+          />
+      </div>
+        )
+        
+        }
 
         <div className="flex w-full">
           <button onClick={handleSubmit} className="bg-irchad-orange text-irchad-gray-dark w-full px-4 py-3 mt-3 rounded-lg outline-none">

@@ -3,6 +3,15 @@ export interface Transaction {
     clientName: string;
     commercial: string;
     dispositifID: string;
-    status: string;
+    status: boolean;
     addingDate: string;
+}
+
+export interface TransactionRes {
+    transactionId: string;
+    userName: string;
+    commercialName: string;
+    dispositiveId: string;
+    Status: boolean;
+    date: string;
 }

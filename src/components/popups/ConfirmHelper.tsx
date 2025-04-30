@@ -1,19 +1,19 @@
-import { X, Upload } from "lucide-react";
+import { X } from "lucide-react";
 import { useState } from "react";
-import { addTransaction } from "@/services/transactionsService";
-
-interface AddTransactionProps {
+import { ConfirmHelperRecommandation } from "@/services/AssistanceService";
+interface ConfirmHelperProps {
+    id: string;
     closePopup: () => void;
     onChange: () => void;
 }
   
-const AddTransaction: React.FC<AddTransactionProps> = ({ closePopup, onChange }) => {
+const ConfirmHelper: React.FC<ConfirmHelperProps> = ({ id, closePopup, onChange }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string|null>(null)
 
     const [formData, setFormData] = useState({
-        user_id: 0,
-        commercial_id: 0
+        password: ""
+
       });
 
     
@@ -24,26 +24,25 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ closePopup, onChange })
       const handleSubmit = async () => {
         try {
           const payload: Record<string, any> = {
-            user_id: formData.user_id,
-            commercial_id: formData.commercial_id,
-            date: new Date().toISOString()
+            password: formData.password
+
           };
 
           setLoading(true);
-         
-          const response = await addTransaction(payload);
+          
+          const response = await ConfirmHelperRecommandation(id, payload);
           if (response.success){
             setLoading(false);
             closePopup();
             onChange();
           }else{
              setLoading(false);
-             setError(response.message || `Failed to add transaction`)
+             setError(`Failed to Confirm Helper`)
           }
 
         } catch (error) {
-          setError(`Failed to add transaction`)
-          console.error(`Failed to add transaction `, error);
+          setError(`Failed to Confirm Helper`)
+          console.error(`Failed to Confirm Helper: `, error);
         }
       };
   
@@ -53,31 +52,24 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ closePopup, onChange })
             <X className="cursor-pointer text-red-700" onClick={closePopup}/>
         </div>        
 
-        <p className="text-xl text-irchad-white font-roboto-bold">Add Transaction</p>
+        <p className="text-xl text-irchad-white font-roboto-bold">Confirm Helper</p>
 
         <div className="flex flex-col space-y-2 w-full">
-            <p className="text-[16px] text-irchad-gray-light font-roboto">Client Id</p>
+            <p className="text-[16px] text-irchad-gray-light font-roboto">Password</p>
             <input
-                type="number"
-                value={formData.user_id}
-                onChange={(e) => handleChange("user_id", e.target.value)}
+                type="password"
+                value={formData.password}
+                onChange={(e) => handleChange("password", e.target.value)}
                 className="border border-irchad-gray-light bg-irchad-gray rounded-lg p-4 text-[16px] text-irchad-gray-light font-roboto"
             />
         </div>
 
-        <div className="flex flex-col space-y-2 w-full">
-            <p className="text-[16px] text-irchad-gray-light font-roboto">Commercial Id</p>
-            <input
-                type="number"
-                value={formData.commercial_id}
-                onChange={(e) => handleChange("commercial_id", e.target.value)}
-                className="border border-irchad-gray-light bg-irchad-gray rounded-lg p-4 text-[16px] text-irchad-gray-light font-roboto"
-            />
-        </div>
+
+        
 
         <div className="flex w-full">
           <button onClick={handleSubmit} className="bg-irchad-orange text-irchad-gray-dark w-full px-4 py-3 mt-3 rounded-lg outline-none">
-             {loading ? `Adding Transaction...` : `Add Transaction`}
+            {loading ? `Confirming Helper` : `Confirm Helper`}
           </button>
         </div>
         {error && 
@@ -89,5 +81,5 @@ const AddTransaction: React.FC<AddTransactionProps> = ({ closePopup, onChange })
     );
 };
   
-export default AddTransaction;
+export default ConfirmHelper;
   

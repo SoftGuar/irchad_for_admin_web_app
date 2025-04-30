@@ -64,21 +64,28 @@ const Sidebar = () => {
 
         {/* Sub-menu */}
         {isAccountsOpen && (
-          <div className="ml-6 mt-1 space-y-1">
-            {["users", "admins", "maintainers", "helpers", "commercials", "decision-makers"].map((item) => (
-              <Link
-                key={item}
-                href={`/${item}`}
-                className={`flex items-center gap-2 px-2 py-1 text-sm rounded-md ${
-                  selectedItem === item ? "bg-[#FF8B00]/[0.64]" : "text-gray-300 hover:text-white"
-                }`}
-                onClick={() => handleSubmenuClick(item)}
-              >
-                <span className="text-lg">•</span> {item.charAt(0).toUpperCase() + item.slice(1)}
-              </Link>
-            ))}
-          </div>
-        )}
+            <div className="ml-6 mt-1 space-y-1">
+              {["users", "admins", "maintainers", "helpers", "commercials", "decision-makers"]
+                .filter((item) => {
+                  const role = localStorage.getItem("role");
+                  // Only show 'admins' if role is 'superadmin'
+                  if (item === "admins") return role === "superAdmin";
+                  return role === "admin";
+                })
+                .map((item) => (
+                  <Link
+                    key={item}
+                    href={`/${item}`}
+                    className={`flex items-center gap-2 px-2 py-1 text-sm rounded-md ${
+                      selectedItem === item ? "bg-[#FF8B00]/[0.64]" : "text-gray-300 hover:text-white"
+                    }`}
+                    onClick={() => handleSubmenuClick(item)}
+                  >
+                    <span className="text-lg">•</span> {item.charAt(0).toUpperCase() + item.slice(1)}
+                  </Link>
+                ))}
+            </div>
+          )}
 
         {/* Devices Section */}
         <Link

@@ -10,11 +10,13 @@ import Image from "next/image";
 import { getUserById } from "@/services/UserManagementService";
 import { useParams } from "next/navigation";
 import { editUser } from "@/services/UserManagementService";
+import { getHelperRecommandations } from "@/services/AssistanceService";
 
 const UserPage = () => {
   const { user_id } = useParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string|null>(null)
+  const [HelperRecommandations, setHelperRecommandations] = useState<any>([])
   const [user, setUser] = useState(
     {
       id: '',
@@ -32,11 +34,12 @@ const UserPage = () => {
   const [isEditing, setIsEditing] = useState(false)
   const [activeTab, setActiveTab] = useState("personal");
 
-  useEffect(() => {
+
     const getPersonalInfos = async () => {
       try {
         const response = await getUserById("user", String(user_id)); 
         if(response.success){
+          const helpers = await getHelperRecommandations();
           const user = response.data;
           const userData = {
             id: user.id.toString(),
@@ -51,6 +54,7 @@ const UserPage = () => {
             
           };
           setUser(userData); 
+          setHelperRecommandations(helpers.data)
         }else {
           setError('Failed to get personal informations');
         }
@@ -63,8 +67,14 @@ const UserPage = () => {
       }
     };
 
+  
+
+
+  useEffect(() => {
     getPersonalInfos();
   }, []);
+
+
 
   if (loading) {
     return (
@@ -116,9 +126,13 @@ const UserPage = () => {
     {name:"Aissa Saouli", phoneNumber:"+213 735 64 46 32"},
   ]
 
-  const ContactsItems = EmergencyContacts.map(contact => ({
-    title: contact.name,
-    description: `Phone Number: ${contact.phoneNumber}`
+  const ContactsItems = HelperRecommandations
+  .filter((contact:{ id: any; first_name: any; last_name: any; phone: any; email: any; status: any; user_id: any }) => contact.user_id == user.id)
+  .map((contact: { id: any; first_name: any; last_name: any; phone: any; email: any; status: any }) => ({
+    id: contact.id,
+    title: contact.first_name + " " + contact.last_name,
+    description: `Email: ${contact.email}     |     Phone Number: ${contact.phone}`,
+    Status: contact.status
   }));
 
   
@@ -157,10 +171,14 @@ const UserPage = () => {
     ],
     "reportedIssuesAndErrors": [
       {
+        "id":"1",
+        "Status":"on",
         "title": "Problem1",
         "description": "gwgfiwh3rfhngorwfcbsqfuyrwe"
       },
       {
+        "id":"2",
+        "Status":"on",
         "title": "Problem1",
         "description": "gwgfiwh3rfhngorwfcbsqfuyrwe"
       }
@@ -220,7 +238,7 @@ const UserPage = () => {
                 {error}
               </p>
               }
-          <ItemsList title="Emergency Contacts" items={ContactsItems}/>
+          <ItemsList title="Emergency Contacts" items={ContactsItems} onChange={getPersonalInfos}/>
     </div>
     : 
         <div>
@@ -230,7 +248,7 @@ const UserPage = () => {
           </div>
           <ActivityHistoryCard title="Navigation History" activities={device.navigationHistory} />
         </div>
-        <ItemsList title="Reported Issues and Errors" items={device.reportedIssuesAndErrors}/>
+        <ItemsList title="Reported Issues and Errors" items={device.reportedIssuesAndErrors} onChange={getPersonalInfos}/>
         <div className="bg-[#2E2E2E] p-6 mx-6 rounded-md  flex flex-col gap-4 mb-4">
         <h2 className="text-lg font-semibold text-white">Environments</h2>
               {device.environments.map(({image, name, description, favoriteRoutes, favoritePOIs}, index) => (

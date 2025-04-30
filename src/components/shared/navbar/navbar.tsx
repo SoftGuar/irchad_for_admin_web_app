@@ -38,7 +38,7 @@ const Navbar = () => {
               phone: user.phone,
               joinedAt: new Date().toISOString().split('T')[0], 
               avatar: "/images/ProfilePic.png",
-              role: "Admin",
+              role: localStorage.getItem("role") || "admin",
               
             };
             setUser(userData); 

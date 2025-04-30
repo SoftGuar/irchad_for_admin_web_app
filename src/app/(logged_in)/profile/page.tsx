@@ -39,14 +39,14 @@ const UserPage = () => {
             lastName: user.last_name,
             email: user.email,
             phone: user.phone,
-            joinedAt: new Date().toISOString().split('T')[0], 
+            joinedAt: user.created_at.split('T')[0], 
             avatar: "/images/ProfilePic.png",
-            role: "admin",
+            role: localStorage.getItem("role") || "admin"
             
           };
           setUser(userData); 
         }else {
-          setError('Failed to get personal informations');
+          setError(response?.message || 'Failed to get personal informations');
         }
 
       } catch (error) {

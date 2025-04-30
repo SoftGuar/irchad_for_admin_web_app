@@ -10,6 +10,8 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+
   const router = useRouter();
 
 const handleSubmit = async (e: { preventDefault: () => void }) => {
@@ -18,7 +20,10 @@ const handleSubmit = async (e: { preventDefault: () => void }) => {
 
   try {
     setLoading(true);
-    const data = await login(email, password, "admin");
+    const role = isSuperAdmin ? "superAdmin" : "admin";
+    const data = await login(email, password, role);
+
+
     setLoading(false);
     if (!data) {
       setError("No response received from the server.");
@@ -27,6 +32,7 @@ const handleSubmit = async (e: { preventDefault: () => void }) => {
     if (data.success) {
       // Store the token 
       localStorage.setItem("token", data.data.token);
+      localStorage.setItem("role", role);
       router.push("/");
     }else{
       // If the backend sends an error message, display it
@@ -79,7 +85,12 @@ const handleSubmit = async (e: { preventDefault: () => void }) => {
             </div>
             <div className="flex items-center justify-between mb-4">
               <label className="flex items-center text-sm">
-                <input type="checkbox" className="mr-2" /> Remember me?
+              <input
+                    type="checkbox"
+                    className="mr-2"
+                    checked={isSuperAdmin}
+                    onChange={(e) => setIsSuperAdmin(e.target.checked)}
+                    /> I am a superAdmin
               </label>
               <a href="#" className="text-orange-500 text-sm">Forgot Password?</a>
             </div>

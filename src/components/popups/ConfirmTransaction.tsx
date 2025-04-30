@@ -1,35 +1,32 @@
 "use client";
 import { X } from "lucide-react";
-import { Transaction } from "@/types/transaction";
+import { confirmTransaction } from "@/services/transactionsService";
 import { useState } from "react";
-import { deleteTransaction } from "@/services/transactionsService";
-  
-interface DeleteTransactionProps {
-    transaction: Transaction;
+
+interface ConfirmTransactionProps {
+    transaction_id: string;
+    dispositive_id: string;
     closePopup: () => void;
-    onChange: () => void;
 }
   
-const DeleteTransaction: React.FC<DeleteTransactionProps> = ({ transaction, closePopup, onChange }) => {
-const [loading, setLoading] = useState(false);
+const ConfirmTransaction: React.FC<ConfirmTransactionProps> = ({ transaction_id, dispositive_id, closePopup}) => {
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string|null>(null)
-    const handleDelete = async () => {
+    const handleConfirm = async () => {
       try {
           setLoading(true);
-
-          const response = await deleteTransaction(transaction.id);
+          const response = await confirmTransaction(transaction_id, dispositive_id);
           if (response.success){
             setLoading(false);
             closePopup();
-            onChange();
           }else{
             setLoading(false);
-            setError(response.message || `Failed to delete transaction`)
+            setError(response.message || `Failed to confirm transaction`)
           }
 
         } catch (error) {
-          setError(`Failed to delete transaction`)
-          console.error(`Failed to delete transaction: `, error);
+          setError(`Failed to confirm transaction`)
+          console.error(`Failed to confirm transaction: `, error);
         }
     };
   
@@ -39,17 +36,17 @@ const [loading, setLoading] = useState(false);
             <X className="cursor-pointer text-red-700" onClick={closePopup}/>
         </div>        
 
-        <p className="text-xl text-irchad-white font-roboto-bold">Do you confirm deleting this transaction?</p>
+        <p className="text-xl text-irchad-white font-roboto-bold">Do you want to confirm this transaction?</p>
 
-        <p className="text-xl text-irchad-gray-light font-roboto">{transaction.id}</p>
+        <p className="text-xl text-irchad-gray-light font-roboto">Transaction ID: {transaction_id}</p>
 
         <div className="flex space-x-4">
           <button onClick={closePopup} className="bg-irchad-gray border border-irchad-orange text-irchad-orange font-roboto px-4 py-2 rounded-[10px] outline-none">
             Cancel
           </button>
 
-          <button onClick={handleDelete} className="bg-irchad-orange text-irchad-gray px-4 py-2 rounded-[10px] font-roboto outline-none">
-            {loading ? `Deleting transaction...` : `Delete transaction`}
+          <button onClick={handleConfirm} className="bg-irchad-orange text-irchad-gray px-4 py-2 rounded-[10px] font-roboto outline-none">
+          {loading ? `Confirming Transaction...` : `Confirm Transaction`}
           </button>
         </div>
         {error && 
@@ -62,4 +59,4 @@ const [loading, setLoading] = useState(false);
 };
   
 
-export default DeleteTransaction;
+export default ConfirmTransaction;
