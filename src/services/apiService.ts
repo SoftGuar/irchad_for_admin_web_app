@@ -27,11 +27,11 @@ const api = axios.create({
       const response = await api.post(endpoint, data);
       return response.data;
     },
-  
     put: async (endpoint: string, data: any) => {
       const response = await api.put(endpoint, data);
       return response.data;
     },
+    
   
     delete: async (endpoint: string) => {
       const response = await api.delete(endpoint);

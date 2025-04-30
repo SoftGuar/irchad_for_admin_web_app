@@ -1,9 +1,8 @@
-
-"use client";
 import { useState } from "react";
 import AttachUserPopup from "../popups/AttachUserPopUp";
 import { Pen, Save } from "lucide-react";
 import { DeviceData } from "@/types/device";
+import { deviceApi } from "@/services/deviceApi";  // Import the deviceApi
 
 interface Props {
   data: DeviceData;
@@ -21,13 +20,29 @@ const DeviceInfo: React.FC<Props> = ({ data }) => {
     }));
   };
 
-  const handleSave = () => {
-    console.log("Saved Data:", editedData);
-    setIsEditing(false);
+  const handleSave = async () => {
+    try {
+      // Call the update API method with the correct structure
+      const updatedDevice = {
+        type: editedData.type,
+        start_date: editedData.start_date,
+        end_date: editedData.end_date,
+        initial_state: editedData.initial_state || '', // Optional field if required
+        MAC: editedData.MAC,
+        state: editedData.state,
+        product_id: editedData.Product?.id || 0, // Ensure the correct product_id is sent
+      };
+
+      const response = await deviceApi.update(data.id, updatedDevice);
+      console.log("Device updated:", response);
+      setIsEditing(false);  // Exit editing mode after successful save
+    } catch (error) {
+      console.error("Error updating device:", error);
+    }
   };
 
   return (
-    <div className="bg-[#2E2E2E] p-4 rounded-lg space-y-4">
+    <div className="bg-[#2E2E2E] p-4 rounded-lg space-y-4 w-full">
       <div className="flex justify-between items-center">
         <h2 className="text-lg font-semibold text-gray-300">Device Info</h2>
         {isEditing ? (
@@ -174,4 +189,3 @@ const DeviceInfo: React.FC<Props> = ({ data }) => {
 };
 
 export default DeviceInfo;
-

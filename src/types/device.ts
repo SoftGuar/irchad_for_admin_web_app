@@ -17,6 +17,7 @@ export interface DeviceData {
     start_date: any;
     id: string;
     assignedUser: any;
+    initial_state : string;
     image: string;
     location: string;
     status: string;
