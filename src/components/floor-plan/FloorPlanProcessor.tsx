@@ -1,7 +1,8 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Upload, Save, ZoomIn, ZoomOut, Eye, EyeOff, Plus, Eraser, Navigation, MapPin, Download } from 'lucide-react';
-import { Environment, GridCell } from '@/types/environment';
-import { pre } from 'framer-motion/client';
+import { Environment, GridCell, Zone, ZoneShape, POI } from '@/types/environment';
+import ZoneSelector from './ZoneSelector';
+import POISelector from './POISelector';
 
 interface FloorPlanProcessorProps {
   environment: Environment;
@@ -15,7 +16,7 @@ interface Selection {
   endY: number;
 }
 
-type Mode = 'view' | 'addObstacle' | 'removeObstacle' | 'removeElement';
+type Mode = 'view' | 'addObstacle' | 'removeObstacle' | 'removeElement' | 'addZone' | 'addPOI';
 
 const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
   environment,
@@ -33,6 +34,10 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
   const [isSelecting, setIsSelecting] = useState(false);
   const [editedImage, setEditedImage] = useState<string | null>(null);
   const [imageSize, setImageSize] = useState<{ width: number; height: number } | null>(null);
+  const [zones, setZones] = useState<Zone[]>(environment.floorPlan?.zones || []);
+  const [currentZone, setCurrentZone] = useState<Omit<Zone, 'id' | 'shapes'> | null>(null);
+  const [pois, setPois] = useState<POI[]>(environment.floorPlan?.pois || []);
+  const [currentPOI, setCurrentPOI] = useState<Omit<POI, 'id' | 'x' | 'y'> | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -40,7 +45,6 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
   const imageRef = useRef<HTMLImageElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Update canvas size when image loads
   useEffect(() => {
     if (!imageRef.current || !canvasRef.current) return;
 
@@ -51,12 +55,10 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
       const canvas = canvasRef.current;
       const container = containerRef.current;
 
-      // Set canvas size to match container dimensions for sharp rendering
       const rect = container.getBoundingClientRect();
       canvas.width = rect.width;
       canvas.height = rect.height;
 
-      // Store actual image dimensions
       setImageSize({
         width: img.naturalWidth,
         height: img.naturalHeight
@@ -66,12 +68,10 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
     const img = imageRef.current;
     img.onload = updateCanvasSize;
 
-    // Initial update
     if (img.complete) {
       updateCanvasSize();
     }
 
-    // Update on resize
     const resizeObserver = new ResizeObserver(updateCanvasSize);
     if (containerRef.current) {
       resizeObserver.observe(containerRef.current);
@@ -90,14 +90,12 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
       setLoading(true);
       setError(null);
 
-      // Convert file to base64
       const reader = new FileReader();
       reader.onload = async (event) => {
         if (event.target?.result) {
           const imageData = event.target.result as string;
           setImage(imageData);
 
-          // Process image with API
           const formData = new FormData();
           formData.append('file', file);
           formData.append('options', JSON.stringify({
@@ -136,7 +134,9 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
       await onSave({
         image: editedImage || image,
         grid: gridData,
-        processedAt: new Date().toISOString()
+        processedAt: new Date().toISOString(),
+        zones,
+        pois
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to save floor plan');
@@ -145,19 +145,27 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
     }
   };
 
+  const handleZoneCreate = useCallback((zone: Omit<Zone, 'id' | 'shapes'>) => {
+    setCurrentZone(zone);
+    setMode('addZone');
+  }, []);
+
+  const handlePOICreate = useCallback((poi: Omit<POI, 'id' | 'x' | 'y'>) => {
+    setCurrentPOI(poi);
+    setMode('addPOI');
+  }, []);
+
   const getCellCoordinates = useCallback((e: React.MouseEvent) => {
-    if (!gridData || !imageRef.current || !containerRef.current) return null;
+    if (!gridData || !containerRef.current) return null;
     
     const container = containerRef.current;
     const rect = container.getBoundingClientRect();
     const gridWidth = gridData[0].length;
     const gridHeight = gridData.length;
     
-    // Get coordinates relative to the container
     const relX = e.clientX - rect.left;
     const relY = e.clientY - rect.top;
     
-    // Scale coordinates based on zoom level
     const scaledX = relX / (zoom / 100);
     const scaledY = relY / (zoom / 100);
     
@@ -174,19 +182,34 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
-    if (!gridData || (mode !== 'addObstacle' && mode !== 'removeObstacle' && mode !== 'removeElement')) return;
-    
+    if (!gridData) return;
+
     const coords = getCellCoordinates(e);
     if (!coords) return;
-    
-    setIsSelecting(true);
-    setSelection({
-      startX: coords.x,
-      startY: coords.y,
-      endX: coords.x,
-      endY: coords.y
-    });
-  }, [gridData, mode, getCellCoordinates]);
+
+    if (mode === 'addPOI' && currentPOI) {
+      const newPOI: POI = {
+        id: `poi-${Date.now()}`,
+        x: coords.x,
+        y: coords.y,
+        ...currentPOI
+      };
+      setPois(prev => [...prev, newPOI]);
+      setMode('view');
+      setCurrentPOI(null);
+      return;
+    }
+
+    if (mode === 'addObstacle' || mode === 'removeObstacle' || mode === 'removeElement' || mode === 'addZone') {
+      setIsSelecting(true);
+      setSelection({
+        startX: coords.x,
+        startY: coords.y,
+        endX: coords.x,
+        endY: coords.y
+      });
+    }
+  }, [gridData, mode, currentPOI, getCellCoordinates]);
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
@@ -209,7 +232,6 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Set canvas size to match original image dimensions
     canvas.width = imageSize.width;
     canvas.height = imageSize.height;
 
@@ -241,6 +263,29 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
 
     if (mode === 'removeElement') {
       applyWhiteSquare();
+    } else if (mode === 'addZone' && currentZone) {
+      if (!zones.some(z => z.name === currentZone.name)) {
+        const newZone: Zone = {
+          id: `zone-${Date.now()}`,
+          ...currentZone,
+          shapes: [{
+            coordinates: [[minX, minY], [maxX, maxY]]
+          }]
+        };
+        setZones(prev => [...prev, newZone]);
+      } else {
+        const existingZone = zones.find(z => z.name === currentZone.name);
+        if (existingZone) {
+          const newShape: ZoneShape = {
+            coordinates: [[minX, minY], [maxX, maxY]]
+          };
+          setZones(prev => prev.map(zone => 
+            zone.id === existingZone.id 
+              ? { ...zone, shapes: [...zone.shapes, newShape] }
+              : zone
+          ));
+        }
+      }
     } else {
       const newGridData = gridData.map(row => [...row]);
       const cellValue = mode === 'addObstacle' ? 1 : 0;
@@ -258,7 +303,7 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
     if (mode === 'removeElement') {
       setMode('view');
     }
-  }, [selection, isSelecting, gridData, mode, applyWhiteSquare]);
+  }, [selection, isSelecting, gridData, mode, currentZone, zones, applyWhiteSquare]);
 
   const downloadEditedImage = useCallback(() => {
     if (!editedImage) return;
@@ -271,7 +316,6 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
     document.body.removeChild(link);
   }, [editedImage]);
 
-  // Draw grid overlay
   useEffect(() => {
     if (!canvasRef.current || !gridData.length || !showGrid || !containerRef.current) return;
 
@@ -280,16 +324,51 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Clear the entire canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     const rect = container.getBoundingClientRect();
     const cellWidth = rect.width / gridData[0].length;
     const cellHeight = rect.height / gridData.length;
 
-    // Apply zoom scaling to context
     ctx.save();
     ctx.scale(zoom / 100, zoom / 100);
+
+    // Draw zones
+    zones.forEach(zone => {
+      zone.shapes.forEach(shape => {
+        const [[x1, y1], [x2, y2]] = shape.coordinates;
+        ctx.fillStyle = `${zone.color}40`;
+        ctx.fillRect(
+          x1 * cellWidth,
+          y1 * cellHeight,
+          (x2 - x1 + 1) * cellWidth,
+          (y2 - y1 + 1) * cellHeight
+        );
+      });
+    });
+
+    // Draw POIs
+    pois.forEach(poi => {
+      const centerX = (poi.x + 0.5) * cellWidth;
+      const centerY = (poi.y + 0.5) * cellHeight;
+      const radius = Math.min(cellWidth, cellHeight) * 0.3;
+
+      // Draw circle
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+      ctx.fillStyle = poi.color;
+      ctx.fill();
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Draw label
+      ctx.font = '12px Arial';
+      ctx.fillStyle = '#fff';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'bottom';
+      ctx.fillText(poi.name, centerX, centerY - radius - 5);
+    });
 
     // Draw grid and obstacles
     gridData.forEach((row, y) => {
@@ -303,7 +382,7 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
       });
     });
 
-    // Draw selection overlay
+    // Draw selection
     if (isSelecting && selection) {
       const minX = Math.min(selection.startX, selection.endX);
       const maxX = Math.max(selection.startX, selection.endX);
@@ -312,6 +391,7 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
 
       ctx.fillStyle = mode === 'removeElement' ? 'rgba(128, 0, 128, 0.3)' :
                      mode === 'addObstacle' ? 'rgba(255, 0, 0, 0.3)' :
+                     mode === 'addZone' ? 'rgba(0, 255, 0, 0.3)' :
                      'rgba(0, 0, 255, 0.3)';
       ctx.fillRect(
         minX * cellWidth,
@@ -322,6 +402,7 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
 
       ctx.strokeStyle = mode === 'removeElement' ? '#800080' :
                        mode === 'addObstacle' ? '#ff0000' :
+                       mode === 'addZone' ? '#00ff00' :
                        '#0000ff';
       ctx.lineWidth = 2;
       ctx.strokeRect(
@@ -333,7 +414,90 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
     }
 
     ctx.restore();
-  }, [gridData, showGrid, opacity, isSelecting, selection, mode, zoom]);
+  }, [gridData, showGrid, opacity, isSelecting, selection, mode, zoom, zones, pois]);
+
+  const ZoneList = () => {
+    if (zones.length === 0) return null;
+
+    return (
+      <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+        <h3 className="font-semibold mb-2">Zones</h3>
+        <ul className="space-y-1">
+          {zones.map(zone => (
+            <li key={zone.id} className="flex items-center justify-between">
+              <div className="flex items-center">
+                <div 
+                  className="w-3 h-3 mr-2" 
+                  style={{ backgroundColor: zone.color }}
+                />
+                <span>{zone.name}</span>
+                <span className="text-gray-500 text-xs ml-2">
+                  ({zone.shapes.length} shape{zone.shapes.length !== 1 ? 's' : ''})
+                </span>
+              </div>
+              <div className="flex gap-2">
+                <button 
+                  className="text-gray-500 text-xs hover:text-gray-700"
+                  onClick={() => {
+                    setCurrentZone({
+                      name: zone.name,
+                      type: zone.type,
+                      color: zone.color,
+                      category: zone.category,
+                      width: zone.width,
+                      height: zone.height,
+                      image: zone.image
+                    });
+                    setMode('addZone');
+                  }}
+                >
+                  Add Shape
+                </button>
+                <button 
+                  className="text-red-500 text-xs hover:text-red-700"
+                  onClick={() => setZones(prev => prev.filter(z => z.id !== zone.id))}
+                >
+                  Remove
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  };
+
+  const POIList = () => {
+    if (pois.length === 0) return null;
+
+    return (
+      <div className="mt-4 p-4 bg-orange-50 rounded-lg">
+        <h3 className="font-semibold mb-2">Points of Interest</h3>
+        <ul className="space-y-1">
+          {pois.map(poi => (
+            <li key={poi.id} className="flex items-center justify-between">
+              <div className="flex items-center">
+                <div 
+                  className="w-3 h-3 mr-2 rounded-full" 
+                  style={{ backgroundColor: poi.color }}
+                />
+                <span>{poi.name}</span>
+                {poi.type && (
+                  <span className="text-gray-500 text-xs ml-2">({poi.type})</span>
+                )}
+              </div>
+              <button 
+                className="text-red-500 text-xs hover:text-red-700"
+                onClick={() => setPois(prev => prev.filter(p => p.id !== poi.id))}
+              >
+                Remove
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  };
 
   return (
     <div className="flex flex-col h-full bg-irchad-gray rounded-lg p-6 space-y-4">
@@ -367,7 +531,6 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
         </div>
       </div>
 
-      {/* Controls */}
       <div className="flex items-center gap-4 flex-wrap">
         <div className="flex items-center gap-2">
           <button
@@ -454,6 +617,11 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
             <span>Download Image</span>
           </button>
         )}
+
+        <div className="ml-4 flex gap-2">
+          <ZoneSelector onZoneCreate={handleZoneCreate} />
+          <POISelector onPOICreate={handlePOICreate} />
+        </div>
       </div>
 
       <canvas
@@ -461,7 +629,6 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
         style={{ display: 'none' }}
       />
 
-      {/* Floor Plan Display */}
       <div 
         ref={containerRef}
         className="flex-1 relative border border-irchad-gray-light rounded-lg overflow-hidden bg-white"
@@ -505,6 +672,11 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
             Upload a floor plan to begin
           </div>
         )}
+      </div>
+
+      <div className="space-y-4">
+        <ZoneList />
+        <POIList />
       </div>
 
       {error && (

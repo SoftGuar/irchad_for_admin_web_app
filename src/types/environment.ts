@@ -13,6 +13,8 @@ export interface Environment {
         image: string | null;
         grid: GridCell[][] | null;
         processedAt?: string;
+        zones?: Zone[];
+        pois?: POI[];
     };
 }
 
@@ -20,12 +22,18 @@ export interface Zone {
     id: string,
     type: string,
     name: string,
+    color?: string;
     width: number,
     height: number,
     category: string,
     image: string,
+    shapes?: ZoneShape[];
 }
 
+
+export interface ZoneShape {
+    coordinates: [[number, number], [number, number]];
+  }
 export interface POI {
     id: string,
     type: string,
@@ -35,6 +43,9 @@ export interface POI {
     category: string,
     image: string,
     zone?: string,
+    color?: string;
+    x?: number;
+    y?: number;
 }
 
 interface History {
