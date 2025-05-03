@@ -1,6 +1,7 @@
 "use client";
 import { X } from "lucide-react";
 import { Device } from "@/types/device";
+import { deviceApi } from "@/services/deviceApi";
   
 interface DeleteUserProps {
     device: Device;
@@ -9,9 +10,14 @@ interface DeleteUserProps {
   
 const DeleteDevice: React.FC<DeleteUserProps> = ({ device, closePopup }) => {
   
-    const handleDelete = () => {
-      console.log("deleted user:", device.id);
-      closePopup();
+    const handleDesactivate = async () => {
+      try {
+        await deviceApi.block(device.id, true);
+        console.log("Device deactivated:", device.id);
+        closePopup();
+    } catch (error) {
+        console.error("Error deactivating device:", error);
+    }
     };
   
     return (
@@ -29,7 +35,7 @@ const DeleteDevice: React.FC<DeleteUserProps> = ({ device, closePopup }) => {
             Cancel
           </button>
 
-          <button onClick={handleDelete} className="bg-irchad-orange text-irchad-gray px-4 py-2 rounded-[10px] font-roboto outline-none">
+          <button onClick={handleDesactivate} className="bg-irchad-orange text-irchad-gray px-4 py-2 rounded-[10px] font-roboto outline-none">
             Confirm
           </button>
         </div>

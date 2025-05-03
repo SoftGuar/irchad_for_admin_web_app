@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import Image from 'next/image';
 import { useState } from 'react';
@@ -50,18 +50,18 @@ const handleSubmit = async (e: { preventDefault: () => void }) => {
 
   return (
     <div className="flex h-screen w-screen overflow-hidden">
-
-      {/* Left Side: Login Form */}
       <div className="w-1/2 flex flex-col justify-center items-center bg-[#1E1E1E] text-white p-0 m-0">
         <div className="w-full max-w-md">
-        <div className="flex items-center justify-center mb-4">
-        <Image src="/images/logo.png" alt="Logo" width={50} height={50} />
-  <span className="text-xl  ml-2 ">IRCHAD</span>
-
-</div>
+          <div className="flex items-center justify-center mb-4">
+            <Image src="/images/logo.png" alt="Logo" width={50} height={50} />
+            <span className="text-xl ml-2">IRCHAD</span>
+          </div>
 
           <h1 className="text-3xl font-semibold mb-4 text-center">Sign In</h1>
           <p className="text-gray-400 text-center mb-6">Sign in to stay connected.</p>
+
+          {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label className="block text-sm mb-1">Email</label>
@@ -106,10 +106,9 @@ const handleSubmit = async (e: { preventDefault: () => void }) => {
         </div>
       </div>
 
-      {/* Right Side: Background Image */}
       <div className="w-1/2 relative">
         <Image
-          src="/images/login_image.png" // Ensure the image is in the public folder
+          src="/images/login_image.png"
           alt="Background Image"
           layout="fill"
           objectFit="cover"

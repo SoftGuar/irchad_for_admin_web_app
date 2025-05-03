@@ -6,11 +6,11 @@ interface Props {
 
 const DeviceImage: React.FC<Props> = ({ data }) => {
   return (
-    <div className="relative bg-[#2E2E2E] p-4 rounded-lg h-full">
+    <div className="relative bg-[#2E2E2E] p-4 rounded-lg h-full w-full">
       
       <div className="w-full h-[200px] md:h-[265px] rounded-lg overflow-hidden">
         <img 
-          src={data.image} 
+          src="https://www.bosshunting.com.au/wp-content/uploads/2024/11/Apple-Reportedly-Pursuing-Smart-Glasses-Following-Vision-Pro-Flop.jpg"
           alt="Smart Glasses" 
           className="w-full h-full object-cover rounded-lg mt-16"
         />

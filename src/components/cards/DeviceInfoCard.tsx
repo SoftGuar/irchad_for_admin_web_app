@@ -1,8 +1,8 @@
-"use client";
 import { useState } from "react";
 import AttachUserPopup from "../popups/AttachUserPopUp";
 import { Pen, Save } from "lucide-react";
 import { DeviceData } from "@/types/device";
+import { deviceApi } from "@/services/deviceApi";  // Import the deviceApi
 
 interface Props {
   data: DeviceData;
@@ -20,13 +20,29 @@ const DeviceInfo: React.FC<Props> = ({ data }) => {
     }));
   };
 
-  const handleSave = () => {
-    console.log("Saved Data:", editedData);
-    setIsEditing(false);
+  const handleSave = async () => {
+    try {
+      // Call the update API method with the correct structure
+      const updatedDevice = {
+        type: editedData.type,
+        start_date: editedData.start_date,
+        end_date: editedData.end_date,
+        initial_state: editedData.initial_state || '', // Optional field if required
+        MAC: editedData.MAC,
+        state: editedData.state,
+        product_id: editedData.Product?.id || 0, // Ensure the correct product_id is sent
+      };
+
+      const response = await deviceApi.update(data.id, updatedDevice);
+      console.log("Device updated:", response);
+      setIsEditing(false);  // Exit editing mode after successful save
+    } catch (error) {
+      console.error("Error updating device:", error);
+    }
   };
 
   return (
-    <div className="bg-[#2E2E2E] p-4 rounded-lg space-y-4">
+    <div className="bg-[#2E2E2E] p-4 rounded-lg space-y-4 w-full">
       <div className="flex justify-between items-center">
         <h2 className="text-lg font-semibold text-gray-300">Device Info</h2>
         {isEditing ? (
@@ -46,17 +62,17 @@ const DeviceInfo: React.FC<Props> = ({ data }) => {
         )}
       </div>
 
-      <div className="grid grid-cols-2 gap-y-3 text-white"> 
+      <div className="grid grid-cols-2 gap-y-3 text-white">
         <p className="font-semibold">Device ID</p>
         {isEditing ? (
           <input
             type="text"
-            value={editedData.deviceId}
-            onChange={(e) => handleInputChange("deviceId", e.target.value)}
+            value={editedData.id}
+            onChange={(e) => handleInputChange("id", e.target.value)}
             className="bg-transparent border-b border-white"
           />
         ) : (
-          <p>{data.deviceId}</p>
+          <p>{data.id}</p>
         )}
 
         <p className="font-semibold">Type</p>
@@ -75,49 +91,61 @@ const DeviceInfo: React.FC<Props> = ({ data }) => {
         {isEditing ? (
           <input
             type="text"
-            value={editedData.mac}
-            onChange={(e) => handleInputChange("mac", e.target.value)}
+            value={editedData.MAC}
+            onChange={(e) => handleInputChange("MAC", e.target.value)}
             className="bg-transparent border-b border-white"
           />
         ) : (
-          <p>{data.mac}</p>
+          <p>{data.MAC}</p>
         )}
 
         <p className="font-semibold">Device Status</p>
         {isEditing ? (
           <input
             type="text"
-            value={editedData.status}
-            onChange={(e) => handleInputChange("status", e.target.value)}
+            value={editedData.state}
+            onChange={(e) => handleInputChange("state", e.target.value)}
             className="bg-transparent border-b border-white"
           />
         ) : (
-          <p>{data.status}</p>
+          <p>{data.state}</p>
         )}
 
         <p className="font-semibold">Activation Date</p>
         {isEditing ? (
           <input
             type="text"
-            value={editedData.activationDate}
-            onChange={(e) => handleInputChange("activationDate", e.target.value)}
+            value={editedData.start_date}
+            onChange={(e) => handleInputChange("start_date", e.target.value)}
             className="bg-transparent border-b border-white"
           />
         ) : (
-          <p>{data.activationDate}</p>
+          <p>{data.start_date}</p>
+        )}
+
+        <p className="font-semibold">End Date</p>
+        {isEditing ? (
+          <input
+            type="text"
+            value={editedData.end_date}
+            onChange={(e) => handleInputChange("end_date", e.target.value)}
+            className="bg-transparent border-b border-white"
+          />
+        ) : (
+          <p>{data.end_date}</p>
         )}
 
         <p className="font-semibold">Assigned User</p>
-        {data.assignedUser ? (
+        {data.user_id ? (
           isEditing ? (
             <input
               type="text"
-              value={editedData.assignedUser || ""}
-              onChange={(e) => handleInputChange("assignedUser", e.target.value)}
+              value={editedData.user_id || ""}
+              onChange={(e) => handleInputChange("user_id", e.target.value)}
               className="bg-transparent border-b border-white"
             />
           ) : (
-            <p>{data.assignedUser}</p>
+            <p>{data.user_id}</p>
           )
         ) : (
           <button
@@ -132,12 +160,20 @@ const DeviceInfo: React.FC<Props> = ({ data }) => {
         {isEditing ? (
           <input
             type="text"
-            value={editedData.softwareVersion}
-            onChange={(e) => handleInputChange("softwareVersion", e.target.value)}
+            value={editedData.Product?.name || ""}
+            onChange={(e) =>
+              setEditedData((prev) => ({
+                ...prev,
+                Product: {
+                  ...prev.Product,
+                  name: e.target.value,
+                },
+              }))
+            }
             className="bg-transparent border-b border-white"
           />
         ) : (
-          <p>{data.softwareVersion}</p>
+          <p>{data.Product?.name || "N/A"}</p>
         )}
       </div>
 
@@ -145,7 +181,7 @@ const DeviceInfo: React.FC<Props> = ({ data }) => {
         <AttachUserPopup
           onClose={() => setPopupOpen(false)}
           isOpen={isPopupOpen}
-          deviceId={data.deviceId}
+          deviceId={data.id}
         />
       )}
     </div>

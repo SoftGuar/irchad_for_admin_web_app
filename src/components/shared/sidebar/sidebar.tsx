@@ -1,19 +1,27 @@
 "use client"; // Ensure this is a Client Component
 
 import { useState } from "react";
-import { ChevronDown, ChevronRight, Users, LayoutGrid, Settings, MapPin, Repeat } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronRight,
+  Users,
+  LayoutGrid,
+  Settings,
+  MapPin,
+  User
+} from "lucide-react";
 import Link from "next/link";
 
 const Sidebar = () => {
   const [isAccountsOpen, setIsAccountsOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState("");
-  const [selectedMain, setSelectedMain] = useState("dashboard"); 
- 
+  const [selectedMain, setSelectedMain] = useState("dashboard");
+
   const handleSubmenuClick = (item: string) => {
     setSelectedItem(item);
-    setSelectedMain("accounts");  
+    setSelectedMain("accounts");
   };
-  
+
   const handleMainClick = (item: string) => {
     setSelectedItem(item);
     setSelectedMain(item);
@@ -34,12 +42,28 @@ const Sidebar = () => {
         <Link
           href="/"
           className={`flex items-center gap-2 text-sm px-3 py-2 rounded-md ${
-            selectedMain === "dashboard" ? "bg-[#FF8B00]/[0.64]" : "text-gray-300 hover:text-white"
+            selectedMain === "dashboard"
+              ? "bg-[#FF8B00]/[0.64]"
+              : "text-gray-300 hover:text-white"
           }`}
           onClick={() => handleMainClick("dashboard")}
         >
           <LayoutGrid className="w-5 h-5" />
           <span>Dashboard</span>
+        </Link>
+
+        {/* Profile Section */}
+        <Link
+          href="/profile"
+          className={`flex items-center gap-2 text-sm px-3 py-2 rounded-md ${
+            selectedMain === "profile"
+              ? "bg-[#FF8B00]/[0.64]"
+              : "text-gray-300 hover:text-white"
+          }`}
+          onClick={() => handleMainClick("profile")}
+        >
+          <User className="w-5 h-5" />
+          <span>Profile</span>
         </Link>
 
         {/* Pages Section */}
@@ -52,7 +76,7 @@ const Sidebar = () => {
           }`}
           onClick={() => {
             setIsAccountsOpen(!isAccountsOpen);
-            setSelectedMain("accounts"); // Set "Accounts" as active
+            setSelectedMain("accounts");
           }}
         >
           <div className="flex items-center gap-2">
@@ -64,34 +88,31 @@ const Sidebar = () => {
 
         {/* Sub-menu */}
         {isAccountsOpen && (
-            <div className="ml-6 mt-1 space-y-1">
-              {["users", "admins", "maintainers", "helpers", "commercials", "decision-makers"]
-                .filter((item) => {
-                  const role = localStorage.getItem("role");
-                  // Only show 'admins' if role is 'superadmin'
-                  if (item === "admins") return role === "superAdmin";
-                  return role === "admin";
-                })
-                .map((item) => (
-                  <Link
-                    key={item}
-                    href={`/${item}`}
-                    className={`flex items-center gap-2 px-2 py-1 text-sm rounded-md ${
-                      selectedItem === item ? "bg-[#FF8B00]/[0.64]" : "text-gray-300 hover:text-white"
-                    }`}
-                    onClick={() => handleSubmenuClick(item)}
-                  >
-                    <span className="text-lg">•</span> {item.charAt(0).toUpperCase() + item.slice(1)}
-                  </Link>
-                ))}
-            </div>
-          )}
+          <div className="ml-6 mt-1 space-y-1">
+            {["users", "admins", "maintainers", "commercials", "decision-makers"].map((item) => (
+              <Link
+                key={item}
+                href={`/${item}`}
+                className={`flex items-center gap-2 px-2 py-1 text-sm rounded-md ${
+                  selectedItem === item
+                    ? "bg-[#FF8B00]/[0.64]"
+                    : "text-gray-300 hover:text-white"
+                }`}
+                onClick={() => handleSubmenuClick(item)}
+              >
+                <span className="text-lg">•</span> {item.charAt(0).toUpperCase() + item.slice(1)}
+              </Link>
+            ))}
+          </div>
+        )}
 
         {/* Devices Section */}
         <Link
           href="/devices"
           className={`flex items-center gap-2 px-3 py-2 text-sm rounded-md ${
-            selectedMain === "devices" ? "bg-[#FF8B00]/[0.64]" : "text-gray-300 hover:text-white"
+            selectedMain === "devices"
+              ? "bg-[#FF8B00]/[0.64]"
+              : "text-gray-300 hover:text-white"
           }`}
           onClick={() => handleMainClick("devices")}
         >
@@ -103,24 +124,14 @@ const Sidebar = () => {
         <Link
           href="/environments"
           className={`flex items-center gap-2 px-3 py-2 text-sm rounded-md ${
-            selectedMain === "environments" ? "bg-[#FF8B00]/[0.64]" : "text-gray-300 hover:text-white"
+            selectedMain === "environments"
+              ? "bg-[#FF8B00]/[0.64]"
+              : "text-gray-300 hover:text-white"
           }`}
           onClick={() => handleMainClick("environments")}
         >
           <MapPin className="w-5 h-5" />
           <span>Environments</span>
-        </Link>
-
-          {/* Transactions Section */}
-          <Link
-          href="/transactions"
-          className={`flex items-center gap-2 px-3 py-2 text-sm rounded-md ${
-            selectedMain === "transactions" ? "bg-[#FF8B00]/[0.64]" : "text-gray-300 hover:text-white"
-          }`}
-          onClick={() => handleMainClick("transactions")}
-        >
-          <Repeat className="w-5 h-5" />
-          <span>Transactions</span>
         </Link>
       </nav>
     </div>
