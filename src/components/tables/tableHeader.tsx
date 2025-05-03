@@ -85,16 +85,21 @@ const HeaderSection: React.FC<HeaderSectionProps> = ({
       </div>
 
       {/* Add New Item */}
-      <div
-        className="absolute right-5 bg-[#FF8B00] px-4 py-2 rounded-lg cursor-pointer"
-        onClick={openAddPopup}
-      >
-        {type === "decision maker" ? (
-          <p className="text-[16px] font-roboto text-[#1E1E1E]">+ Add</p>
-        ) : (
-          <p className="text-[16px] font-roboto text-[#1E1E1E]">+ Add {type}</p>
-        )}
-      </div>
+      { type !== "transaction" && (
+              <div
+              className="absolute right-5 bg-[#FF8B00] px-4 py-2 rounded-lg cursor-pointer"
+              onClick={openAddPopup}
+            >
+              {type === "decision maker" ? (
+                <p className="text-[16px] font-roboto text-[#1E1E1E]">+ Add</p>
+              ) : (
+                <p className="text-[16px] font-roboto text-[#1E1E1E]">+ Add {type}</p>
+              )}
+            </div>
+      )
+
+      }
+
     </div>
   );
 };

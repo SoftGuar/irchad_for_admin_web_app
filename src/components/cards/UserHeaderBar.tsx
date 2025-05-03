@@ -7,7 +7,6 @@ interface UserHeaderBarProps {
     userName: string;
     avatar: string;
     role: string;
-    status: string;
   };
   onEdit: () => void;
   showDevice?: (tab:string)=>void
@@ -24,14 +23,11 @@ const UserHeaderBar: React.FC<UserHeaderBarProps> = ({ user, onEdit, showDevice 
           alt="Profile"
           className="w-20 h-20 rounded-full border-2 border-secondary_color"
         />
-        {user.status === "Active" && (
-          <span className="absolute bottom-1 right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-[#2E2E2E]" />
-        )}
       </div>
 
       <div className="ml-8">
         <h3 className="text-lg font-semibold">{user.userName}</h3>
-        <p className="text-sm text-[#D1D5DB]">{user.status}</p>
+        
       </div>
 
       <div className="ml-auto flex items-center gap-4">

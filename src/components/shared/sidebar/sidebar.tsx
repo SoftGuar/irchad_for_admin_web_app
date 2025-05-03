@@ -1,19 +1,27 @@
 "use client"; // Ensure this is a Client Component
 
 import { useState } from "react";
-import { ChevronDown, ChevronRight, Users, LayoutGrid, Settings, MapPin } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronRight,
+  Users,
+  LayoutGrid,
+  Settings,
+  MapPin,
+  User
+} from "lucide-react";
 import Link from "next/link";
 
 const Sidebar = () => {
   const [isAccountsOpen, setIsAccountsOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState("");
-  const [selectedMain, setSelectedMain] = useState("dashboard"); 
- 
+  const [selectedMain, setSelectedMain] = useState("dashboard");
+
   const handleSubmenuClick = (item: string) => {
     setSelectedItem(item);
-    setSelectedMain("accounts");  
+    setSelectedMain("accounts");
   };
-  
+
   const handleMainClick = (item: string) => {
     setSelectedItem(item);
     setSelectedMain(item);
@@ -34,12 +42,28 @@ const Sidebar = () => {
         <Link
           href="/"
           className={`flex items-center gap-2 text-sm px-3 py-2 rounded-md ${
-            selectedMain === "dashboard" ? "bg-[#FF8B00]/[0.64]" : "text-gray-300 hover:text-white"
+            selectedMain === "dashboard"
+              ? "bg-[#FF8B00]/[0.64]"
+              : "text-gray-300 hover:text-white"
           }`}
           onClick={() => handleMainClick("dashboard")}
         >
           <LayoutGrid className="w-5 h-5" />
           <span>Dashboard</span>
+        </Link>
+
+        {/* Profile Section */}
+        <Link
+          href="/profile"
+          className={`flex items-center gap-2 text-sm px-3 py-2 rounded-md ${
+            selectedMain === "profile"
+              ? "bg-[#FF8B00]/[0.64]"
+              : "text-gray-300 hover:text-white"
+          }`}
+          onClick={() => handleMainClick("profile")}
+        >
+          <User className="w-5 h-5" />
+          <span>Profile</span>
         </Link>
 
         {/* Pages Section */}
@@ -52,7 +76,7 @@ const Sidebar = () => {
           }`}
           onClick={() => {
             setIsAccountsOpen(!isAccountsOpen);
-            setSelectedMain("accounts"); // Set "Accounts" as active
+            setSelectedMain("accounts");
           }}
         >
           <div className="flex items-center gap-2">
@@ -70,7 +94,9 @@ const Sidebar = () => {
                 key={item}
                 href={`/${item}`}
                 className={`flex items-center gap-2 px-2 py-1 text-sm rounded-md ${
-                  selectedItem === item ? "bg-[#FF8B00]/[0.64]" : "text-gray-300 hover:text-white"
+                  selectedItem === item
+                    ? "bg-[#FF8B00]/[0.64]"
+                    : "text-gray-300 hover:text-white"
                 }`}
                 onClick={() => handleSubmenuClick(item)}
               >
@@ -84,7 +110,9 @@ const Sidebar = () => {
         <Link
           href="/devices"
           className={`flex items-center gap-2 px-3 py-2 text-sm rounded-md ${
-            selectedMain === "devices" ? "bg-[#FF8B00]/[0.64]" : "text-gray-300 hover:text-white"
+            selectedMain === "devices"
+              ? "bg-[#FF8B00]/[0.64]"
+              : "text-gray-300 hover:text-white"
           }`}
           onClick={() => handleMainClick("devices")}
         >
@@ -96,7 +124,9 @@ const Sidebar = () => {
         <Link
           href="/environments"
           className={`flex items-center gap-2 px-3 py-2 text-sm rounded-md ${
-            selectedMain === "environments" ? "bg-[#FF8B00]/[0.64]" : "text-gray-300 hover:text-white"
+            selectedMain === "environments"
+              ? "bg-[#FF8B00]/[0.64]"
+              : "text-gray-300 hover:text-white"
           }`}
           onClick={() => handleMainClick("environments")}
         >

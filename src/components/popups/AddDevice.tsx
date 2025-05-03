@@ -1,67 +1,99 @@
-import { X, Upload } from "lucide-react";
+import React, { useState } from "react";
+import { X } from "lucide-react";
+import { deviceApi } from "@/services/deviceApi"; // adjust based on your project structure
 
-interface AddUserProps {
-    closePopup: () => void;
+interface AddDeviceProps {
+  closePopup: () => void;
 }
-  
-const AddDevice: React.FC<AddUserProps> = ({ closePopup }) => {
-    const handleSubmit = () => {
-      closePopup();
-    };
-  
-    return (
-      <div className="flex flex-col relative bg-irchad-gray-dark shadow-xl py-[30px] px-[45px] rounded-[30px] space-y-2 w-1/3">
-        <div className="absolute top-10 right-10">
-            <X className="cursor-pointer text-red-700" onClick={closePopup}/>
-        </div>        
 
-        <p className="text-xl text-irchad-white font-roboto-bold">Add Device</p>
+const AddDevice: React.FC<AddDeviceProps> = ({ closePopup }) => {
+  const [formData, setFormData] = useState({
+    type: "",
+    MAC: "",
+    state: "",
+    initial_state: "",
+    product_id: 0,
+  });
 
-        <div className="flex flex-col space-y-2 w-full">
-            <p className="text-[16px] text-irchad-gray-light font-roboto">Type</p>
-            <input
-                type="text"
-                className="border border-irchad-gray-light bg-irchad-gray rounded-lg p-4 text-[16px] text-irchad-gray-light font-roboto"
-            />
-        </div>
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
-        <div className="flex flex-col space-y-2 w-full">
-            <p className="text-[16px] text-irchad-gray-light font-roboto">MAC Address</p>
-            <input
-                type="text"
-                className="border border-irchad-gray-light bg-irchad-gray rounded-lg p-4 text-[16px] text-irchad-gray-light font-roboto"
-            />
-        </div>
+  const handleChange = (field: string, value: string | number) => {
+    setFormData({ ...formData, [field]: value });
+  };
 
-        <div className="flex flex-col space-y-2 w-full">
-            <p className="text-[16px] text-irchad-gray-light font-roboto">Status</p>
-            <input
-                type="text"
-                className="border border-irchad-gray-light bg-irchad-gray rounded-lg p-4 text-[16px] text-irchad-gray-light font-roboto"
-            />
-        </div>
+  const handleSubmit = async () => {
+    setLoading(true);
+    setError(null);
+    setSuccess(false);
 
-        <div className="flex flex-col space-y-2 w-full">
-            <p className="text-[16px] text-irchad-gray-light font-roboto">Image</p>
-            <label className="relative w-full cursor-pointer">
-                <input
-                    type="file"
-                    className="hidden"
-                />
-                <div className="border border-irchad-gray-light bg-irchad-gray rounded-lg p-4 text-[16px] text-irchad-gray-light font-roboto w-full flex items-center justify-end">
-                    <Upload className="text-irchad-gray-light" size={20} />
-                </div>
-            </label>
-        </div>
+    try {
+      const formattedData = {
+        type: formData.type,
+        MAC: formData.MAC.replace(/-/g, ":"),
+        state: formData.state,
+        initial_state: formData.initial_state,
+        product_id: formData.product_id,
+        start_date: new Date(),
+        end_date: new Date(),
+      };
 
-        <div className="flex w-full">
-          <button onClick={handleSubmit} className="bg-irchad-orange text-irchad-gray-dark w-full px-4 py-3 mt-3 rounded-lg outline-none">
-            Add Device
-          </button>
-        </div>
+      console.log("Sending data:", JSON.stringify(formattedData, null, 2));
+      await deviceApi.create(formattedData);
+
+      setSuccess(true);
+      setTimeout(closePopup, 1500);
+    } catch (error) {
+      setError((error as Error).message || "Failed to add device.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex flex-col relative bg-irchad-gray-dark shadow-xl py-8 px-10 rounded-2xl space-y-4 w-1/3">
+      <div className="absolute top-4 right-4">
+        <X className="cursor-pointer text-red-700" onClick={closePopup} />
       </div>
-    );
+
+      <p className="text-xl text-irchad-white font-roboto-bold">Add Device</p>
+
+      {["type", "MAC", "state", "initial_state", "product_id"].map((field) => (
+        <div key={field} className="flex flex-col space-y-1 w-full">
+          <p className="text-sm text-irchad-gray-light font-roboto capitalize">
+            {field.replace("_", " ")}
+          </p>
+          <input
+            type={field === "product_id" ? "number" : "text"}
+            value={formData[field as keyof typeof formData]}
+            onChange={(e) => handleChange(field, field === "product_id" ? +e.target.value : e.target.value)}
+            className="bg-irchad-gray-light text-irchad-white p-2 rounded-md outline-none"
+          />
+        </div>
+      ))}
+
+      <div className="flex flex-col space-y-2 w-full">
+        <p className="text-sm text-irchad-gray-light font-roboto">Image</p>
+        <label className="relative w-full cursor-pointer">
+          <div className="border border-dashed border-gray-400 rounded-md p-4 text-center text-gray-400">
+            (Image upload placeholder)
+          </div>
+        </label>
+      </div>
+
+      {error && <p className="text-red-500 text-sm">{error}</p>}
+      {success && <p className="text-green-500 text-sm">Device added successfully!</p>}
+
+      <button
+        onClick={handleSubmit}
+        disabled={loading}
+        className="bg-irchad-orange text-irchad-gray-dark w-full px-4 py-3 mt-3 rounded-lg outline-none"
+      >
+        {loading ? "Submitting..." : "Submit"}
+      </button>
+    </div>
+  );
 };
-  
+
 export default AddDevice;
-  

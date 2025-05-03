@@ -2,10 +2,17 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {Trash2, Filter, Pen, ArrowRight, Ban, Download, Link } from "lucide-react";
 import Checkbox from "../shared/Checkbox";
+import PopUpScreen from "../popups/popUpScreen";
+import ConfirmTransaction from "../popups/ConfirmTransaction";
 
 interface Column<T> {
   key: keyof T;
   label: string;
+}
+
+interface BaseTransaction {
+  id: string;
+  dispositifID: string;
 }
 
 interface TableDataProps<T> {
@@ -26,6 +33,24 @@ const TableData = <T,>({
   const router = useRouter();
   const [checkedRows, setCheckedRows] = useState<boolean[]>(new Array(data.length).fill(false));
   const [isHeaderChecked, setIsHeaderChecked] = useState(false);
+  const [showPopup, setShowPopup] = useState<"confirm" | null>(null);
+  const [transIdToConfirm, setTransIdToConfirm] = useState<string | null>(null);
+  const [dispIdToConfirm, setDispIdToConfirm] = useState<string | null>(null);
+
+  
+
+
+    const openConfirmTransactionPopup = (transaction_id: string, dispositive_id: string) => {
+      setTransIdToConfirm(transaction_id);
+      setDispIdToConfirm(dispositive_id);
+      setShowPopup("confirm");
+    };
+
+    const closePopup = () => {
+      setShowPopup(null);
+      setTransIdToConfirm(null);
+      setDispIdToConfirm(null);
+    };
 
   const handleHeaderCheckboxChange = () => {
     const newCheckedState = !isHeaderChecked;
@@ -79,23 +104,43 @@ const TableData = <T,>({
         {data.map((item, index) => (
           <div key={index} className="flex relative justify-center items-center w-full px-5 py-4 bg-irchad-gray-dark border-b border-irchad-gray-light">
             {columns.slice(1).map((column, colIndex) => (
-              <div key={colIndex} className={`flex ${(page === "pois" || page === "zones") ? 'w-2/3' : 'w-1/5'} justify-start items-center`}>
-                {column.key === "name" ? (
-                  <>
-                    <Checkbox
-                      checked={checkedRows[index]}
-                      onChange={() => handleRowCheckboxChange(index)}
-                    />
-                    <p className="text-irchad-gray-light text-[16px] font-product-sans ml-1">
-                      {page === "environments" && (item[column.key] == null) ? "" : String(item[column.key] || "")}
-                    </p>
-                  </>
-                ) : (
-                  <p className="text-irchad-gray-light text-[16px] font-product-sans">
+              <div
+              key={colIndex}
+              className={`flex ${(page === "pois" || page === "zones") ? 'w-2/3' : 'w-1/5'} justify-start items-center`}
+            >
+              {column.key === "name" || column.key === "clientName" ? (
+                <>
+                  <Checkbox
+                    checked={checkedRows[index]}
+                    onChange={() => handleRowCheckboxChange(index)}
+                  />
+                  <p className="text-irchad-gray-light text-[16px] font-product-sans ml-1 truncate">
                     {page === "environments" && (item[column.key] == null) ? "" : String(item[column.key] || "")}
                   </p>
-                )}
-              </div>
+                </>
+              ) : page === "transactions" && column.key === "status" ? (
+                item[column.key] === false ? (
+                  <button
+                    className="px-3 py-1 bg-[#FF8B00] text-white rounded-md text-sm"
+                    onClick={() => {
+                      const itemTyped = item as { id: string; dispositifID: string };
+                      openConfirmTransactionPopup(itemTyped.id, itemTyped.dispositifID);
+                    }}
+
+                  
+                  >
+                    Confirm
+                  </button>
+                ) : (
+                  <p className="text-irchad-gray-light text-[16px] font-product-sans">Confirmed</p>
+                )
+              ) : (
+                <p className="text-irchad-gray-light text-[16px] font-product-sans truncate">
+                  {page === "environments" && (item[column.key] == null) ? "" : String(item[column.key] || "")}
+                </p>
+              )}
+            </div>
+            
             ))}
             <div className={`flex ${page === "pois" || page === "zones" ? 'w-1/3' : 'w-1/12'} justify-end items-center space-x-6`}>
               <Trash2 className="text-irchad-gray-light cursor-pointer w-5 h-5" onClick={() => onDelete(item)}/>
@@ -105,18 +150,25 @@ const TableData = <T,>({
                 page === "environments" ? 
                 <Download className="text-irchad-gray-light cursor-pointer w-5 h-5" onClick={() => onEdit(item)}/>
                 :
+                page !== "transactions" ?
                 <Pen className="text-irchad-gray-light cursor-pointer w-5 h-5" onClick={() => onEdit(item)}/>
+              : null
               }
               {page === "pois" ? 
                 <Link className="text-irchad-gray-light cursor-pointer w-5 h-5" onClick={() => onEdit(item)}/> 
                 : 
-                page !== "zones" &&
+                page !== "zones" && page !== "transactions" &&
                 <ArrowRight className="text-irchad-gray-light cursor-pointer w-5 h-5" onClick={() => openDetails(item[columns[0].key])}/>
               }
             </div>
           </div>
         ))}
       </div>
+      {showPopup && (
+        <PopUpScreen>
+          {showPopup === "confirm" && transIdToConfirm && dispIdToConfirm && <ConfirmTransaction  transaction_id={transIdToConfirm} dispositive_id={dispIdToConfirm} closePopup={closePopup}/>}
+        </PopUpScreen>
+      )}
     </div>
   );
 };

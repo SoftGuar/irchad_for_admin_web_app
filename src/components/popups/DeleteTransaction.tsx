@@ -1,48 +1,35 @@
 "use client";
 import { X } from "lucide-react";
-import { Account } from "@/types/account";
-import { deleteUser } from "@/services/UserManagementService";
+import { Transaction } from "@/types/transaction";
 import { useState } from "react";
-
-interface DeleteUserProps {
-    type: string;
-    account: Account;
+import { deleteTransaction } from "@/services/transactionsService";
+  
+interface DeleteTransactionProps {
+    transaction: Transaction;
     closePopup: () => void;
     onChange: () => void;
 }
   
-const DeleteUser: React.FC<DeleteUserProps> = ({ type, account, closePopup, onChange }) => {
-    const [loading, setLoading] = useState(false);
+const DeleteTransaction: React.FC<DeleteTransactionProps> = ({ transaction, closePopup, onChange }) => {
+const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string|null>(null)
     const handleDelete = async () => {
       try {
           setLoading(true);
-          let requestType: string;
 
-          switch (type.toLowerCase()) {
-            case "decision-maker":
-              requestType = "decider";
-              break;
-            case "commercial":
-              requestType = "comemrcial";
-              break;
-            default:
-              requestType = type.toLowerCase();
-              break;
-          }
-          const response = await deleteUser(requestType, account.id);
+          const response = await deleteTransaction(transaction.id);
           if (response.success){
             setLoading(false);
             closePopup();
             onChange();
           }else{
             setLoading(false);
-            setError(`Failed to delete ${type}`)
+            setError(response.message || `Failed to delete transaction`)
           }
 
         } catch (error) {
-          setError(`Failed to delete ${type}`)
-          console.error(`Failed to delete ${type}: `, error);
+          setError(`Failed to delete transaction`)
+          console.error(`Failed to delete transaction: `, error);
         }
     };
   
@@ -52,9 +39,9 @@ const DeleteUser: React.FC<DeleteUserProps> = ({ type, account, closePopup, onCh
             <X className="cursor-pointer text-red-700" onClick={closePopup}/>
         </div>        
 
-        <p className="text-xl text-irchad-white font-roboto-bold">Do you confirm deleting this account?</p>
+        <p className="text-xl text-irchad-white font-roboto-bold">Do you confirm deleting this transaction?</p>
 
-        <p className="text-xl text-irchad-gray-light font-roboto">{account.name}</p>
+        <p className="text-xl text-irchad-gray-light font-roboto">{transaction.id}</p>
 
         <div className="flex space-x-4">
           <button onClick={closePopup} className="bg-irchad-gray border border-irchad-orange text-irchad-orange font-roboto px-4 py-2 rounded-[10px] outline-none">
@@ -62,7 +49,7 @@ const DeleteUser: React.FC<DeleteUserProps> = ({ type, account, closePopup, onCh
           </button>
 
           <button onClick={handleDelete} className="bg-irchad-orange text-irchad-gray px-4 py-2 rounded-[10px] font-roboto outline-none">
-          {loading ? `Deleting ${type}...` : `Delete ${type}`}
+            {loading ? `Deleting transaction...` : `Delete transaction`}
           </button>
         </div>
         {error && 
@@ -75,4 +62,4 @@ const DeleteUser: React.FC<DeleteUserProps> = ({ type, account, closePopup, onCh
 };
   
 
-export default DeleteUser;
+export default DeleteTransaction;

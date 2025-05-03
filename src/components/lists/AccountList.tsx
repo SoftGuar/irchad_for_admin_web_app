@@ -12,9 +12,10 @@ import { Account } from "@/types/account";
 interface AccountListProps {
   title: string;
   accountsData: Account[];
+  onChange: () => void;
 }
 
-const AccountList: React.FC<AccountListProps> = ({ title, accountsData }) => {
+const AccountList: React.FC<AccountListProps> = ({ title, accountsData , onChange}) => {
   const [searchValue, setSearchValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [showPopup, setShowPopup] = useState<"add" | "edit" | "delete" | null>(null);
@@ -115,9 +116,9 @@ const AccountList: React.FC<AccountListProps> = ({ title, accountsData }) => {
 
       {showPopup && (
         <PopUpScreen>
-          {showPopup === "add" && <AddUser type={title} closePopup={closePopup} />}
-          {showPopup === "edit" && accountToEdit && <EditUser type={title} user={accountToEdit} closePopup={closePopup} />}
-          {showPopup === "delete" && accountToDelete && <DeleteUser account={accountToDelete} closePopup={closePopup} />}
+          {showPopup === "add" && <AddUser type={title} closePopup={closePopup} onChange={onChange} />}
+          {showPopup === "edit" && accountToEdit && <EditUser type={title} user={accountToEdit} closePopup={closePopup} onChange={onChange}/>}
+          {showPopup === "delete" && accountToDelete && <DeleteUser type={title} account={accountToDelete} closePopup={closePopup} onChange={onChange}/>}
         </PopUpScreen>
       )}
     </div>

@@ -9,7 +9,7 @@ import { editUser } from "@/services/UserManagementService";
 import Image from "next/image";
 
 const UserPage = () => {
-  const { admin_id } = useParams();
+  const { helper_id } = useParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string|null>(null)
   const [user, setUser] = useState(
@@ -31,7 +31,7 @@ const UserPage = () => {
   useEffect(() => {
     const getPersonalInfos = async () => {
       try {
-        const response = await getUserById("admin", String(admin_id)); 
+        const response = await getUserById("helper", String(helper_id)); 
         if(response.success){
           const user = response.data;
           const userData = {
@@ -43,7 +43,7 @@ const UserPage = () => {
             phone: user.phone,
             joinedAt: new Date().toISOString().split('T')[0], 
             avatar: "/images/ProfilePic.png",
-            role: "admin",
+            role: "helper"
             
           };
           setUser(userData); 
@@ -70,6 +70,13 @@ const UserPage = () => {
     );
   }
 
+  const  activities = [
+    { message: "Logged in", timestamp: "2025-03-11 10:30 AM" },
+    { message: "Updated profile information", timestamp: "2025-03-10 03:15 PM" },
+    { message: "Changed password", timestamp: "2025-03-09 06:45 PM" },
+    { message: "Updated profile information", timestamp: "2025-02-20 06:45 PM" },
+  ]
+
 
       const onSave = async () => {
         try {
@@ -82,7 +89,7 @@ const UserPage = () => {
 
           setLoading(true);
          
-          const response = await editUser("admin", user.id, payload);
+          const response = await editUser("helper", user.id, payload);
           if (response.success){
             setLoading(false);
             setIsEditing(false);
@@ -99,29 +106,21 @@ const UserPage = () => {
       };
 
 
-
-  const  activities = [
-    { message: "Logged in", timestamp: "2025-03-11 10:30 AM" },
-    { message: "Updated profile information", timestamp: "2025-03-10 03:15 PM" },
-    { message: "Changed password", timestamp: "2025-03-09 06:45 PM" },
-    { message: "Updated profile information", timestamp: "2025-02-20 06:45 PM" },
-  ]
-
     return (
       <div className="p-0">
       <div className="flex relative w-full">
         <Image src="/images/headers/header.svg"  alt="header" width={1663} height={236}/>
         <div className="absolute inset-0 flex flex-col p-6 items-start justify-start text-white text-[35px] font-roboto-bold">
-          Admins
-          <p className="text-[20px] font-roboto-light">Where you manage your system admins</p>
+          Helpers
+          <p className="text-[20px] font-roboto-light">Where you manage your system helpers</p>
         </div>
       </div>
 
-      <UserHeaderBar user={user} onEdit={() => setIsEditing(true)}  />
+      <UserHeaderBar user={user} onEdit={() => setIsEditing(true)} />
 
       <div className="mt-6 grid grid-cols-1 lg:grid-cols-4 gap-6 px-7">
         <div className="lg:col-span-2">
-          <UserInfoCard user={user} isEditing={isEditing} onSave={() => setIsEditing(false)} setUser={setUser}/>
+          <UserInfoCard user={user} isEditing={isEditing} onSave={onSave} setUser={setUser} />
         </div>
         <ActivityHistoryCard title="Activity History" activities={activities} />
       </div>

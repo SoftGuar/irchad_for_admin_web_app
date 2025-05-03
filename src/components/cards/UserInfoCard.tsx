@@ -9,12 +9,11 @@ interface UserInfoCardProps {
     email: string;
     phone: string;
     id: string;
-    privilegeLvl: number;
     avatar: string;
     role: string;
     joinedAt: string;
-    accountState: string;
-    deviceId: string;
+
+
   };
   isEditing: boolean;
   onSave: () => void;
@@ -57,13 +56,8 @@ const UserInfoCard: React.FC<UserInfoCardProps> = ({ user, isEditing, onSave, se
     { name: "lastName",label: "Last name", value: user.lastName },
     { name: "joinedAt",label: `${userSinceLabel} since`, value: user.joinedAt },
     { name: "id",label: `${userSinceLabel} Id`, value: user.id },
-    { name: "accountState",label: "Account state", value: user.accountState },
-    { name: "privilegeLvl",label: "Privilege level", value: user.privilegeLvl },
   ];
   
-  if (user.role === "user") {
-    userData.push({ name:"deviceId",label: "Device ID", value: user.deviceId });
-  }
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,7 +71,7 @@ const UserInfoCard: React.FC<UserInfoCardProps> = ({ user, isEditing, onSave, se
           label !== "avatar" && label !== "role" && (label !== "deviceId" || user.role === "user") ? (
             <li className="flex" key={label}>
               <span className="text-white text-lg font-semibold min-w-[250px] capitalize">{label.replace(/([A-Z])/g, ' $1').trim()}:</span>
-              {isEditing ? (
+              {isEditing && name !== 'joinedAt' && name !== 'userName' && name !== 'id' ? (
                 <input 
                   type="text" 
                   name={name} 

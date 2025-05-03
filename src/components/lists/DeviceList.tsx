@@ -89,10 +89,10 @@ const AccountList: React.FC<DeviceListProps> = ({ title, devicesData }) => {
   const columns = [
     { key: "id", label: "Device ID" }, //first one will be ignored so i duplicated it
     { key: "id", label: "Device ID" },
-    { key: "status", label: "Status" },
+    { key: "state", label: "Status" },
     { key: "type", label: "Type" },
-    { key: "activationDate", label: "Adding date" },
-    { key: "lastEdited", label: "Last edited" }
+    { key: "start_date", label: "Adding date" },
+    { key: "end_date", label: "Last edited" }
   ];
 
   return (
