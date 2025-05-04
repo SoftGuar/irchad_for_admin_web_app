@@ -13,7 +13,6 @@ const FullView = () => {
   useEffect(() => {
     const fetchEnvironment = async () => {
       try {
-        // Use the rooms endpoint from your old application
         const response = await fetch(`http://localhost:8000/floors/${floor_id}`);
         if (!response.ok) throw new Error('Failed to fetch environment');
         const data = await response.json();
@@ -51,7 +50,6 @@ const FullView = () => {
     if (!environment) return;
 
     try {
-      // Use the rooms endpoint from your old application
       const response = await fetch(`http://localhost:8000/floors/${floor_id}`, {
         method: 'PUT', // Changed from PATCH to PUT to match your old API
         headers: {
