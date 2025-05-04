@@ -6,7 +6,7 @@ import FloorPlanProcessor from '@/components/floor-plan/FloorPlanProcessor';
 import { Environment } from '@/types/environment';
 
 const FullView = () => {
-  const { environment_id } = useParams();
+  const { floor_id } = useParams();
   const [environment, setEnvironment] = useState<Environment | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -14,7 +14,7 @@ const FullView = () => {
     const fetchEnvironment = async () => {
       try {
         // Use the rooms endpoint from your old application
-        const response = await fetch(`http://localhost:8000/floors/${environment_id}`);
+        const response = await fetch(`http://localhost:8000/floors/${floor_id}`);
         if (!response.ok) throw new Error('Failed to fetch environment');
         const data = await response.json();
         
@@ -45,14 +45,14 @@ const FullView = () => {
     };
 
     fetchEnvironment();
-  }, [environment_id]);
+  }, [floor_id]);
 
   const handleSaveFloorPlan = async (floorPlan: NonNullable<Environment['floorPlan']>) => {
     if (!environment) return;
 
     try {
       // Use the rooms endpoint from your old application
-      const response = await fetch(`http://localhost:8000/floors/${environment_id}`, {
+      const response = await fetch(`http://localhost:8000/floors/${floor_id}`, {
         method: 'PUT', // Changed from PATCH to PUT to match your old API
         headers: {
           'Content-Type': 'application/json',

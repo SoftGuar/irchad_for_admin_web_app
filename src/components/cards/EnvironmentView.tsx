@@ -1,5 +1,5 @@
 import React from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Maximize } from "lucide-react"
 import { Environment } from "@/types/environment";
 
@@ -9,9 +9,10 @@ interface EnvViewProps {
 
 const EnvironmentView: React.FC<EnvViewProps> = ({ data }) => {
   const router = useRouter();
+  const {floor_id}=useParams();
 
   const goToFullView = (id: string) => {
-    router.push(`/environments/${id}/fullView`);
+    router.push(`/environments/${id}/${floor_id}/fullView`);
   };
 
   return (
