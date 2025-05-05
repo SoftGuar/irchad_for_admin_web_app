@@ -6,6 +6,7 @@ import POISelector from './POISelector';
 
 interface FloorPlanProcessorProps {
   environment: Environment;
+  floorId: string;
   onSave: (floorPlan: NonNullable<Environment['floorPlan']>) => Promise<void>;
 }
 
@@ -20,6 +21,7 @@ type Mode = 'view' | 'addObstacle' | 'removeObstacle' | 'removeElement' | 'addZo
 
 const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
   environment,
+  floorId,
   onSave,
 }) => {
   const [image, setImage] = useState<string | null>(environment.floorPlan?.image || null);
@@ -44,6 +46,152 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
   const editCanvasRef = useRef<HTMLCanvasElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      try {
+        // Fetch POIs
+        const poiResponse = await fetch(`http://localhost:8000/pois/floor/${floorId}`);
+        if (!poiResponse.ok) {
+          throw new Error("Failed to fetch POIs");
+        }
+        const poiData = await poiResponse.json();
+        const transformedPOIs = poiData.map((poi: POI) => ({
+          ...poi,
+          color: poi.color || "#00FF00", // Assign default green color if no color is provided
+        }));
+        setPois(transformedPOIs);
+  
+        // Fetch Zones
+        const zoneResponse = await fetch(`http://localhost:8000/zones/floor/${floorId}`);
+        if (!zoneResponse.ok) {
+          throw new Error("Failed to fetch Zones");
+        }
+        const zoneData = await zoneResponse.json();
+        setZones(zoneData);
+      } catch (error) {
+        console.error("Error fetching initial data:", error);
+        setError(error instanceof Error ? error.message : "An error occurred");
+      }
+    };
+  
+    fetchInitialData();
+  }, [floorId]);
+
+  const createZone = async (zone: Zone) => {
+    try {
+      const response = await fetch("http://localhost:8000/zones", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...zone, floor_id: floorId }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to create zone");
+      }
+      console.log("Zone created successfully");
+    } catch (error) {
+      console.error("Error creating zone:", error);
+    }
+  };
+  
+  const updateZone = async (zoneId: string, updatedZone: Partial<Zone>) => {
+    try {
+      const response = await fetch(`http://localhost:8000/zones/${zoneId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedZone),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to update zone");
+      }
+      console.log("Zone updated successfully");
+    } catch (error) {
+      console.error("Error updating zone:", error);
+    }
+  };
+  
+  const deleteZone = async (zoneId: string) => {
+    try {
+      const response = await fetch(`http://localhost:8000/zones/${zoneId}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to delete zone");
+      }
+      console.log("Zone deleted successfully");
+    } catch (error) {
+      console.error("Error deleting zone:", error);
+    }
+  };
+
+  const handleZoneDelete = async (zoneId: string) => {
+    setZones(prev => prev.filter(zone => zone.id !== zoneId));
+  
+    // API call to delete the zone
+    await deleteZone(zoneId);
+  };
+  
+  const createPOI = async (poi: POI) => {
+    try {
+      const response = await fetch("http://localhost:8000/pois", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...poi, floor_id: floorId }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to create POI");
+      }
+      console.log("POI created successfully");
+    } catch (error) {
+      console.error("Error creating POI:", error);
+    }
+  };
+  
+  const updatePOI = async (poiId: string, updatedPOI: Partial<POI>) => {
+    try {
+      const response = await fetch(`http://localhost:8000/pois/${poiId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedPOI),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to update POI");
+      }
+      console.log("POI updated successfully");
+    } catch (error) {
+      console.error("Error updating POI:", error);
+    }
+  };
+  
+  const deletePOI = async (poiId: string) => {
+    try {
+      const response = await fetch(`http://localhost:8000/pois/${poiId}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to delete POI");
+      }
+      console.log("POI deleted successfully");
+    } catch (error) {
+      console.error("Error deleting POI:", error);
+    }
+  };
+
+  const handlePOIDelete = async (poiId: string) => {
+    setPois(prev => prev.filter(poi => poi.id !== poiId));
+  
+    // API call to delete the POI
+    await deletePOI(poiId);
+  };
 
   useEffect(() => {
     if (!imageRef.current || !canvasRef.current) return;
@@ -195,6 +343,7 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
         ...currentPOI
       };
       setPois(prev => [...prev, newPOI]);
+      createPOI(newPOI);
       setMode('view');
       setCurrentPOI(null);
       return;
@@ -268,22 +417,26 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
         const newZone: Zone = {
           id: `zone-${Date.now()}`,
           ...currentZone,
-          shapes: [{
+          shape: [{
+            type: 'polygon',
             coordinates: [[minX, minY], [maxX, maxY]]
           }]
         };
         setZones(prev => [...prev, newZone]);
+        createZone(newZone);
       } else {
         const existingZone = zones.find(z => z.name === currentZone.name);
         if (existingZone) {
           const newShape: ZoneShape = {
+            type: 'polygon',
             coordinates: [[minX, minY], [maxX, maxY]]
           };
           setZones(prev => prev.map(zone => 
             zone.id === existingZone.id 
-              ? { ...zone, shapes: [...zone.shapes, newShape] }
+              ? { ...zone, shape: [...zone.shape, newShape] }
               : zone
           ));
+          updateZone(existingZone.id, { shape: [...existingZone.shape, newShape] });
         }
       }
     } else {
@@ -335,7 +488,7 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
 
     // Draw zones
     zones.forEach(zone => {
-      zone.shapes.forEach(shape => {
+      zone.shape.forEach(shape => {
         const [[x1, y1], [x2, y2]] = shape.coordinates;
         ctx.fillStyle = `${zone.color}40`;
         ctx.fillRect(
@@ -348,26 +501,31 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
     });
 
     // Draw POIs
-    pois.forEach(poi => {
-      const centerX = (poi.x + 0.5) * cellWidth;
-      const centerY = (poi.y + 0.5) * cellHeight;
-      const radius = Math.min(cellWidth, cellHeight) * 0.3;
-
-      // Draw circle
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+    pois.forEach((poi) => {
+      const topLeftX = poi.x * cellWidth;
+      const topLeftY = poi.y * cellHeight;
+      const poiWidth = cellWidth * 2; // Make the POI occupy 2x2 squares
+      const poiHeight = cellHeight * 2;
+    
+      // Draw the POI rectangle
       ctx.fillStyle = poi.color;
-      ctx.fill();
+      ctx.fillRect(topLeftX, topLeftY, poiWidth, poiHeight);
+    
+      // Draw the POI border
       ctx.strokeStyle = '#fff';
       ctx.lineWidth = 2;
-      ctx.stroke();
-
-      // Draw label
+      ctx.strokeRect(topLeftX, topLeftY, poiWidth, poiHeight);
+    
+      // Draw the POI label
       ctx.font = '12px Arial';
       ctx.fillStyle = '#fff';
       ctx.textAlign = 'center';
-      ctx.textBaseline = 'bottom';
-      ctx.fillText(poi.name, centerX, centerY - radius - 5);
+      ctx.textBaseline = 'middle';
+      ctx.fillText(
+        poi.name,
+        topLeftX + poiWidth / 2,
+        topLeftY + poiHeight / 2
+      );
     });
 
     // Draw grid and obstacles
@@ -432,7 +590,7 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
                 />
                 <span>{zone.name}</span>
                 <span className="text-gray-500 text-xs ml-2">
-                  ({zone.shapes.length} shape{zone.shapes.length !== 1 ? 's' : ''})
+                  ({zone.shape.length} shape{zone.shape.length !== 1 ? 's' : ''})
                 </span>
               </div>
               <div className="flex gap-2">
@@ -455,7 +613,7 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
                 </button>
                 <button 
                   className="text-red-500 text-xs hover:text-red-700"
-                  onClick={() => setZones(prev => prev.filter(z => z.id !== zone.id))}
+                  onClick={() =>handleZoneDelete(zone.id)}
                 >
                   Remove
                 </button>
@@ -488,7 +646,7 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
               </div>
               <button 
                 className="text-red-500 text-xs hover:text-red-700"
-                onClick={() => setPois(prev => prev.filter(p => p.id !== poi.id))}
+                onClick={()=>handlePOIDelete(poi.id)}
               >
                 Remove
               </button>

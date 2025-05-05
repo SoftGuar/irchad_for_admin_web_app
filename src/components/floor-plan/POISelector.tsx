@@ -1,8 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { POI } from '@/types/environment';
 
 interface POISelectorProps {
   onPOICreate: (poi: Omit<POI, 'id' | 'x' | 'y'>) => void;
+}
+
+interface POICategory {
+  id: string;
+  name: string;
+  description?: string;
 }
 
 const POISelector: React.FC<POISelectorProps> = ({ onPOICreate }) => {
@@ -11,6 +17,27 @@ const POISelector: React.FC<POISelectorProps> = ({ onPOICreate }) => {
   const [isCreating, setIsCreating] = useState(false);
   const [poiType, setPoiType] = useState('default');
   const [description, setDescription] = useState('');
+  const [categories, setCategories] = useState<POICategory[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/pois/categories');
+        if (!response.ok) {
+          throw new Error('Failed to fetch POI categories');
+        }
+        const data = await response.json();
+        setCategories(data);
+        if (data.length > 0) {
+          setPoiType(data[0].id); // Set the first category as the default
+        }
+      } catch (error) {
+        console.error('Error fetching POI categories:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,6 +47,7 @@ const POISelector: React.FC<POISelectorProps> = ({ onPOICreate }) => {
       name: poiName.trim(),
       color: poiColor,
       type: poiType,
+      category_id: poiType, 
       description: description.trim()
     });
 
@@ -60,10 +88,11 @@ const POISelector: React.FC<POISelectorProps> = ({ onPOICreate }) => {
         onChange={(e) => setPoiType(e.target.value)}
         className="px-2 py-1 border rounded text-sm"
       >
-        <option value="default">Default</option>
-        <option value="entrance">Entrance</option>
-        <option value="exit">Exit</option>
-        <option value="landmark">Landmark</option>
+        {categories.map((category) => (
+          <option key={category.id} value={category.id}>
+            {category.name}
+          </option>
+        ))}
       </select>
       <button
         type="submit"

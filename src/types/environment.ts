@@ -23,15 +23,17 @@ export interface Zone {
     type: string,
     name: string,
     color?: string;
+    type_id?: string;
     width: number,
     height: number,
     category: string,
     image: string,
-    shapes?: ZoneShape[];
+    shape?: ZoneShape[];
 }
 
 
 export interface ZoneShape {
+    type: string,
     coordinates: [[number, number], [number, number]];
   }
 export interface POI {

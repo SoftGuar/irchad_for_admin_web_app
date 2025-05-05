@@ -96,6 +96,7 @@ const FullView = () => {
         <FloorPlanProcessor 
           environment={environment}
           onSave={handleSaveFloorPlan}
+          floorId={floor_id as string}
         />
       </div>
     </div>
