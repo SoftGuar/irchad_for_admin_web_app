@@ -51,7 +51,7 @@ const FullView = () => {
 
     try {
       const response = await fetch(`http://localhost:8000/floors/${floor_id}`, {
-        method: 'PUT', // Changed from PATCH to PUT to match your old API
+        method: 'PUT', 
         headers: {
           'Content-Type': 'application/json',
         },
@@ -60,9 +60,9 @@ const FullView = () => {
           name: environment.name,
           building: environment.address,
           floor: 1,
-          width: 10, // Default values, adjust as needed
+          width: 10, 
           height: 8,
-          coordinates: [0, 0], // Default values, adjust as needed
+          coordinates: [0, 0], 
           grid_data: floorPlan.grid,
           grid_dimensions: floorPlan.grid ? [floorPlan.grid[0].length, floorPlan.grid.length] : [0, 0],
           image_data: floorPlan.image

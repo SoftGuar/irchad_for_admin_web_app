@@ -20,7 +20,7 @@ const ZonePOIList: React.FC<AccountListProps> = ({ title, idEnv,type }) => {
     const fetchZoneData = async () => {
       try {
         const response = await fetch(
-          "http://localhost:8000/zones/floor/e881e6e1-ab83-418a-92e0-0eee18976b04"
+          `http://localhost:8000/zones/floor/${idEnv}`
         );
         const data = await response.json();
         console.log("Fetched data:", data);
@@ -43,7 +43,7 @@ const ZonePOIList: React.FC<AccountListProps> = ({ title, idEnv,type }) => {
     const fetchPOIData = async () => {
       try {
         const response = await fetch(
-          "http://localhost:8000/pois/floor/e881e6e1-ab83-418a-92e0-0eee18976b04"
+          `http://localhost:8000/pois/floor/${idEnv}`
         );
         const data = await response.json();
         const transformedData: POI[] = data.map((item: any, index: number) => ({
