@@ -53,12 +53,12 @@ const EnvironmentListPage = () => {
         <div className="w-[95%]">
           <div className="grid grid-cols-1 gap-4">
             {environments.map((env) => (
-              <div key={env.id} className="p-4 border border-gray-300 rounded-lg bg-white">
-                <h3 className="text-lg font-bold">{env.name}</h3>
+              <div key={env.id} className="p-4 border border-gray-300 rounded-lg bg-[#2E2E2E]">
+                <h3 className="text-lg font-bold ">{env.name}</h3>
                 <p className="text-sm text-gray-600">{env.address}</p>
                 <button
                   onClick={() => router.push(`/environments/${env.id}`)}
-                  className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-lg"
+                  className="mt-2 px-4 py-2 bg-[#B46A11] text-white rounded-lg"
                 >
                   See Environment
                 </button>

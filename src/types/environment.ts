@@ -48,6 +48,8 @@ export interface POI {
     color?: string;
     x?: number;
     y?: number;
+    description?: string;
+    category_id?: string;
 }
 
 interface History {

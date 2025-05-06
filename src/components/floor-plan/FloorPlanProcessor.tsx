@@ -40,6 +40,8 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
   const [currentZone, setCurrentZone] = useState<Omit<Zone, 'id' | 'shapes'> | null>(null);
   const [pois, setPois] = useState<POI[]>(environment.floorPlan?.pois || []);
   const [currentPOI, setCurrentPOI] = useState<Omit<POI, 'id' | 'x' | 'y'> | null>(null);
+  const [editingPOI, setEditingPOI] = useState<POI | null>(null);
+  const [editingZone, setEditingZone] = useState<Zone | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -107,11 +109,14 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
         body: JSON.stringify(updatedZone),
       });
       if (!response.ok) {
-        throw new Error("Failed to update zone");
+        throw new Error("Failed to update Zone");
       }
       console.log("Zone updated successfully");
+      setZones((prev) =>
+        prev.map((zone) => (zone.id === zoneId ? { ...zone, ...updatedZone } : zone))
+      );
     } catch (error) {
-      console.error("Error updating zone:", error);
+      console.error("Error updating Zone:", error);
     }
   };
   
@@ -167,6 +172,9 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
         throw new Error("Failed to update POI");
       }
       console.log("POI updated successfully");
+      setPois((prev) =>
+        prev.map((poi) => (poi.id === poiId ? { ...poi, ...updatedPOI } : poi))
+      );
     } catch (error) {
       console.error("Error updating POI:", error);
     }
@@ -302,6 +310,16 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
     setCurrentPOI(poi);
     setMode('addPOI');
   }, []);
+
+  const handlePOIEdit = (poi: POI) => {
+    const updatedPOI = { ...poi, name: "Updated POI Name" }; // Example update
+    updatePOI(poi.id, updatedPOI);
+  };
+
+  const handleZoneEdit = (zone: Zone) => {
+    const updatedZone = { ...zone, name: "Updated Zone Name" }; // Example update
+    updateZone(zone.id, updatedZone);
+  };
 
   const getCellCoordinates = useCallback((e: React.MouseEvent) => {
     if (!gridData || !containerRef.current) return null;
@@ -518,7 +536,7 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
     
       // Draw the POI label
       ctx.font = '12px Arial';
-      ctx.fillStyle = '#fff';
+      ctx.fillStyle = '#000';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(
@@ -576,24 +594,22 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
 
   const ZoneList = () => {
     if (zones.length === 0) return null;
-
+  
     return (
       <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-        <h3 className="font-semibold mb-2">Zones</h3>
+        <h3 className="font-semibold mb-2 text-black">Zones</h3>
         <ul className="space-y-1">
-          {zones.map(zone => (
-            <li key={zone.id} className="flex items-center justify-between">
-              <div className="flex items-center">
-                <div 
-                  className="w-3 h-3 mr-2" 
-                  style={{ backgroundColor: zone.color }}
-                />
-                <span>{zone.name}</span>
-                <span className="text-gray-500 text-xs ml-2">
-                  ({zone.shape.length} shape{zone.shape.length !== 1 ? 's' : ''})
-                </span>
-              </div>
-              <div className="flex gap-2">
+          {zones.map((zone) => (
+            <li key={zone.id} className="flex flex-col gap-2 p-2 bg-white rounded shadow">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <div
+                    className="w-3 h-3 mr-2"
+                    style={{ backgroundColor: zone.color }}
+                  />
+                  <span className="font-semibold text-black">{zone.name}</span>
+                </div>
+                <div className="flex gap-2">
                 <button 
                   className="text-gray-500 text-xs hover:text-gray-700"
                   onClick={() => {
@@ -617,7 +633,16 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
                 >
                   Remove
                 </button>
+                <button
+                  className="text-blue-500 text-xs hover:text-blue-700"
+                  onClick={() => setEditingZone(zone)}
+                >
+                  Edit
+                </button>
               </div>
+                
+              </div>
+              <p className="text-sm text-gray-600">Type: {zone.type_id || "N/A"}</p>
             </li>
           ))}
         </ul>
@@ -625,37 +650,53 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
     );
   };
 
+
+  
+
+
+
   const POIList = () => {
     if (pois.length === 0) return null;
-
+  
     return (
       <div className="mt-4 p-4 bg-orange-50 rounded-lg">
-        <h3 className="font-semibold mb-2">Points of Interest</h3>
+        <h3 className="font-semibold mb-2 text-black">Points of Interest</h3>
         <ul className="space-y-1">
-          {pois.map(poi => (
-            <li key={poi.id} className="flex items-center justify-between">
-              <div className="flex items-center">
-                <div 
-                  className="w-3 h-3 mr-2 rounded-full" 
-                  style={{ backgroundColor: poi.color }}
-                />
-                <span>{poi.name}</span>
-                {poi.type && (
-                  <span className="text-gray-500 text-xs ml-2">({poi.type})</span>
-                )}
-              </div>
-              <button 
+          {pois.map((poi) => (
+            <li key={poi.id} className="flex flex-col gap-2 p-2 bg-white rounded shadow">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <div
+                    className="w-3 h-3 mr-2 rounded-full"
+                    style={{ backgroundColor: poi.color }}
+                  />
+                  <span className="font-semibold text-black">{poi.name}</span>
+                </div>
+                <div className="flex gap-2">
+                <button
+                  className="text-blue-500 text-xs hover:text-blue-700"
+                  onClick={() => setEditingPOI(poi)}
+                >
+                  Edit
+                </button>
+                <button 
                 className="text-red-500 text-xs hover:text-red-700"
                 onClick={()=>handlePOIDelete(poi.id)}
               >
                 Remove
               </button>
+              </div>
+              </div>
+              <p className="text-sm text-gray-600">Description: {poi.description || "N/A"}</p>
+              <p className="text-sm text-gray-600">Category: {poi.category_id || "N/A"}</p>
             </li>
           ))}
         </ul>
       </div>
     );
   };
+
+  
 
   return (
     <div className="flex flex-col h-full bg-irchad-gray rounded-lg p-6 space-y-4">
@@ -842,6 +883,117 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
           {error}
         </div>
       )}
+      {editingZone && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h3 className="text-lg font-semibold mb-4">Edit Zone</h3>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (editingZone) {
+                  const updatedZone = {
+                    ...editingZone,
+                    name: e.target.zoneName.value,
+                    color: e.target.zoneColor.value,
+                  };
+                  updateZone(editingZone.id, updatedZone);
+                  setEditingZone(null);
+                }
+              }}
+            >
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">Name</label>
+                <input
+                  type="text"
+                  name="zoneName"
+                  defaultValue={editingZone.name}
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">Color</label>
+                <input
+                  type="color"
+                  name="zoneColor"
+                  defaultValue={editingZone.color}
+                  className="mt-1 block w-full"
+                />
+              </div>
+              <div className="flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setEditingZone(null)}
+                  className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                >
+                  Save
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+    {editingPOI && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h3 className="text-lg font-semibold mb-4">Edit POI</h3>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (editingPOI) {
+                  const updatedPOI = {
+                    ...editingPOI,
+                    name: e.target.poiName.value,
+                    description: e.target.poiDescription.value,
+                  };
+                  updatePOI(editingPOI.id, updatedPOI);
+                  setEditingPOI(null);
+                }
+              }}
+            >
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">Name</label>
+                <input
+                  type="text"
+                  name="poiName"
+                  defaultValue={editingPOI.name}
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">Description</label>
+                <textarea
+                  name="poiDescription"
+                  defaultValue={editingPOI.description}
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                />
+              </div>
+              <div className="flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setEditingPOI(null)}
+                  className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                >
+                  Save
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
