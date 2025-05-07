@@ -66,7 +66,7 @@ const TableData = <T,>({
           </div>
         ))}
         <div className={`flex ${page === "pois" || page === "zones" ? 'w-1/3' : 'w-1/12'} justify-end items-center space-x-2`}>
-            <Trash2 className="text-irchad-gray-light"/>
+            {/* <Trash2 className="text-irchad-gray-light"/> */}
             <div className="flex space-x-3">
               <Filter className="text-irchad-gray-light"/>
               <p className="text-irchad-gray-light text-[16px] font-roboto">Filter</p>
@@ -77,7 +77,7 @@ const TableData = <T,>({
       {/* content */}
       <div className="flex flex-col w-full">
         {data.map((item, index) => (
-          <div key={index} className="flex relative justify-center items-center w-full px-5 py-4 bg-irchad-gray-dark border-b border-irchad-gray-light">
+          <div key={index} className="flex relative justify-between w-full px-5 py-2 bg-irchad-gray-dark border-b border-irchad-gray-light">
             {columns.slice(1).map((column, colIndex) => (
               <div key={colIndex} className={`flex ${(page === "pois" || page === "zones") ? 'w-2/3' : 'w-1/5'} justify-start items-center`}>
                 {column.key === "name" ? (

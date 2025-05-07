@@ -56,7 +56,7 @@ const AddFloor: React.FC<AddFloorProps> = ({ closePopup, environmentId }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg">
-        <h2 className="text-lg font-bold">Add Floor</h2>
+        <h2 className="text-lg font-bold text-black">Add Floor</h2>
 
         <div className="flex flex-col space-y-2 w-full">
           <p className="text-[16px] text-gray-700">Name</p>
@@ -65,7 +65,7 @@ const AddFloor: React.FC<AddFloorProps> = ({ closePopup, environmentId }) => {
             name="name"
             value={formData.name}
             onChange={handleChange}
-            className="border border-gray-300 rounded-lg p-2"
+            className="border border-gray-300 rounded-lg p-2 text-black"
           />
         </div>
 
@@ -76,7 +76,7 @@ const AddFloor: React.FC<AddFloorProps> = ({ closePopup, environmentId }) => {
             name="level"
             value={formData.level}
             onChange={handleChange}
-            className="border border-gray-300 rounded-lg p-2"
+            className="border border-gray-300 rounded-lg p-2 text-black"
           />
         </div>
 
@@ -86,7 +86,7 @@ const AddFloor: React.FC<AddFloorProps> = ({ closePopup, environmentId }) => {
             name="description"
             value={formData.description}
             onChange={handleChange}
-            className="border border-gray-300 rounded-lg p-2"
+            className="border border-gray-300 rounded-lg p-2 text-black"
           />
         </div>
 
@@ -97,18 +97,18 @@ const AddFloor: React.FC<AddFloorProps> = ({ closePopup, environmentId }) => {
             name="width"
             value={formData.width}
             onChange={handleChange}
-            className="border border-gray-300 rounded-lg p-2"
+            className="border border-gray-300 rounded-lg p-2 text-black"
           />
         </div>
 
         <div className="flex flex-col space-y-2 w-full mt-4">
-          <p className="text-[16px] text-gray-700">Height</p>
+          <p className="text-[16px] text-gray-700 text-black">Height</p>
           <input
             type="number"
             name="height"
             value={formData.height}
             onChange={handleChange}
-            className="border border-gray-300 rounded-lg p-2"
+            className="border border-gray-300 rounded-lg p-2 text-black"
           />
         </div>
 
@@ -119,7 +119,7 @@ const AddFloor: React.FC<AddFloorProps> = ({ closePopup, environmentId }) => {
             name="building"
             value={formData.building}
             onChange={handleChange}
-            className="border border-gray-300 rounded-lg p-2"
+            className="border border-gray-300 rounded-lg p-2 text-black"
           />
         </div>
 
