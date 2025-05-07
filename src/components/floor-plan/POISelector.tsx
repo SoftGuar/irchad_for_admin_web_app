@@ -74,7 +74,7 @@ const POISelector: React.FC<POISelectorProps> = ({ onPOICreate }) => {
         value={poiName}
         onChange={(e) => setPoiName(e.target.value)}
         placeholder="POI name"
-        className="px-2 py-1 border rounded text-sm"
+        className="px-2 py-1 border rounded text-sm text-black"
         autoFocus
       />
       <input
@@ -86,7 +86,7 @@ const POISelector: React.FC<POISelectorProps> = ({ onPOICreate }) => {
       <select
         value={poiType}
         onChange={(e) => setPoiType(e.target.value)}
-        className="px-2 py-1 border rounded text-sm"
+        className="px-2 py-1 border rounded text-sm text-black"
       >
         {categories.map((category) => (
           <option key={category.id} value={category.id}>

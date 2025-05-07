@@ -75,19 +75,19 @@ const ZoneSelector: React.FC<ZoneSelectorProps> = ({ onZoneCreate }) => {
         value={zoneName}
         onChange={(e) => setZoneName(e.target.value)}
         placeholder="Zone name"
-        className="px-2 py-1 border rounded text-sm"
+        className="px-2 py-1 border rounded text-sm text-black"
         autoFocus
       />
       <input
         type="color"
         value={zoneColor}
         onChange={(e) => setZoneColor(e.target.value)}
-        className="w-8 h-8 rounded cursor-pointer"
+        className="w-8 h-8 rounded cursor-pointer "
       />
       <select
         value={zoneType}
         onChange={(e) => setZoneType(e.target.value)}
-        className="px-2 py-1 border rounded text-sm"
+        className="px-2 py-1 border rounded text-sm text-black"
       >
         {types.map((type) => (
           <option key={type.id} value={type.id}>
