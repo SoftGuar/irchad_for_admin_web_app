@@ -886,7 +886,7 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
       {editingZone && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h3 className="text-lg font-semibold mb-4">Edit Zone</h3>
+            <h3 className="text-lg font-semibold mb-4 text-black">Edit Zone</h3>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -907,7 +907,7 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
                   type="text"
                   name="zoneName"
                   defaultValue={editingZone.name}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-black"
                 />
               </div>
               <div className="mb-4">
@@ -942,7 +942,7 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
     {editingPOI && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h3 className="text-lg font-semibold mb-4">Edit POI</h3>
+            <h3 className="text-lg font-semibold mb-4 text-black">Edit POI</h3>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -963,7 +963,7 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
                   type="text"
                   name="poiName"
                   defaultValue={editingPOI.name}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-black"
                 />
               </div>
               <div className="mb-4">
@@ -971,7 +971,7 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
                 <textarea
                   name="poiDescription"
                   defaultValue={editingPOI.description}
-                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                  className="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-black"
                 />
               </div>
               <div className="flex justify-end gap-2">

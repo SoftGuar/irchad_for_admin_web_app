@@ -6,6 +6,7 @@ import TableData from "@/components/tables/tableData";
 import { useEffect, useState } from "react";
 import { Floor } from "@/types/floor"; // Replace with the correct type for floors
 import AddFloor from "@/components/popups/AddFloor";
+import { data } from "framer-motion/client";
 
 interface FloorListProps {
   title: string;
@@ -31,6 +32,7 @@ const FloorList: React.FC<FloorListProps> = ({ title, floorData, environmentId }
 
   const closePopup = () => {
     setShowPopup(null);
+    window.location.reload();
   };
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
