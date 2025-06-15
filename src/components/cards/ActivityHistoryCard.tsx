@@ -47,7 +47,7 @@ const ActivityHistoryCard: React.FC<ActivityHistoryProps> = ({
   };
 
   return (
-    <div className="bg-irchad-gray lg:col-span-2 p-6 rounded-lg w-full shadow-md text-[#D3D3D3] max-h-[80vh] overflow-auto">
+    <div className="bg-irchad-gray lg:col-span-2 p-6 rounded-lg w-full shadow-md text-[#D3D3D3] max-h-[80vh] overflow-auto mb-12">
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-semibold mb-4">{title}</h3>
 
@@ -61,7 +61,7 @@ const ActivityHistoryCard: React.FC<ActivityHistoryProps> = ({
           </div>
 
           {isOpen && (
-            <div className="absolute left-0 mt-2 w-40 bg-irchad-gray rounded-md shadow-lg border border-[#444]">
+            <div className="absolute left-0 w-40 bg-irchad-gray rounded-md shadow-lg border border-[#444] h-1/3 ">
               {filterOptions.map((option, index) => (
                 <div
                     key={index}
@@ -80,7 +80,7 @@ const ActivityHistoryCard: React.FC<ActivityHistoryProps> = ({
 
       </div>
 
-      <div className="relative w-3/4">
+      <div className="relative w-3/4  mb-16">
         <div className="absolute left-5 top-1 h-full w-[1px] bg-[#959595]"></div>
 
         <ul className="space-y-4 pl-6">
