@@ -153,15 +153,12 @@ export default function Dashboard() {
           </div>
 
           <div className="flex flex-col lg:flex-row gap-6 w-full">
-            <div className="w-full lg:w-2/3 bg-[#2E2E2E] p-6 rounded-xl shadow-lg">
+            <div className="w-full lg:w-2/3 bg-[#2E2E2E] p-6 rounded-xl shadow-lg ">
               <h2 className="text-white text-lg font-semibold mb-4">Sales & Cost Chart</h2>
               <SalesChart data={chartData} />
             </div>
 
-            <div className="w-full lg:w-1/3 bg-[#2E2E2E] p-6 rounded-xl shadow-lg">
-              <h2 className="text-white text-lg font-semibold mb-4">Notifications</h2>
-              {/* <NotificationList notifications={notifications} /> */}
-            </div>
+            
           </div>
         </div>
       </div>

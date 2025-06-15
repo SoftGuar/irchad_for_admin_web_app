@@ -1,4 +1,7 @@
 import { fetchClient } from "@/utils/fetchClient";
+import { ApiResponse } from "./ApiResponse";
+import { apiService } from "./apiService";
+import { Device } from "@/types/device";
 
 
 const getToken = () => {
@@ -7,6 +10,7 @@ const getToken = () => {
   }
   return "";
 };
+
 
 
 export const getUsers = async (type: string) => {
@@ -93,3 +97,20 @@ export const getUsers = async (type: string) => {
       body: JSON.stringify(data)
     });
   };
+
+ export const getHistory = async () => {
+    const token = getToken();
+    return fetchClient('/account/history', {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}` 
+      },
+    });
+  };
+
+   export const deviceApi = {
+    getAll: async (): Promise<ApiResponse<Device[]>> => {
+      return await apiService.get("/admin/dispositive/");
+    }};
+  
+ 

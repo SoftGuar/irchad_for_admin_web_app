@@ -8,3 +8,4 @@ export interface User {
     updated_at: string;
     privilege: string
   }
+

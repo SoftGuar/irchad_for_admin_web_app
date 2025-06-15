@@ -3,7 +3,7 @@ import Sidebar from '../../components/shared/sidebar/sidebar';
 import Navbar from '../../components/shared/navbar/navbar';
 import Footer from '../../components/shared/footer/footer';
 import { useRouter } from "next/navigation";
-
+import "../globals.css";
 export default function Layout({ 
     children 
 } : {

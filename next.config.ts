@@ -1,4 +1,7 @@
 module.exports = {
+   experimental: {
+    esmExternals: 'loose'
+  },
   headers: () => [
     {
       source: '/:path*',

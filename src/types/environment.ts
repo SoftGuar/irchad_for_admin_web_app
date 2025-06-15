@@ -52,10 +52,16 @@ export interface POI {
     category_id?: string;
 }
 
-interface History {
-    message: string,
-    timestamp: string,
-}
+  interface Activity {
+    action: string;
+    createdAt: string;
+  }
+  
+  interface ActivityHistoryProps {
+    title: string;
+    activities: Activity[];
+  }
+  
 
 export type GridCell = 0 | 1;
 
