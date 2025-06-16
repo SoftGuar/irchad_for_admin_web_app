@@ -1,6 +1,6 @@
 import axios from "axios";
 const api = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:2000/", //i'll change it with the deployed link later
+    baseURL: process.env.NEXT_PUBLIC_API_URL || "http://0.0.0.0:2000/", //i'll change it with the deployed link later
     headers: {
       "Content-Type": "application/json",
     },
