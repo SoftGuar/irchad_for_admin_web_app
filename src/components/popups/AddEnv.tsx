@@ -188,7 +188,7 @@ const AddEnv: React.FC<AddEnvProps> = ({ closePopup }) => {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http://localhost:8000/environments/", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_CARTOGRAPHIE_SERVICE}/environments/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

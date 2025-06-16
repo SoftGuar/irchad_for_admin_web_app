@@ -64,11 +64,19 @@ function DeviceDetail() {
       });
 
       if (!deviceResponse.ok) throw new Error("Failed to fetch device");
-      const deviceData = await deviceResponse.json();
+      const data = await deviceResponse.json();
+        if (data.success) {
+          // Format the dates in the device data
+          const formattedData = {
+            ...data.data,
+            created_at: formatDate(data.data.created_at),
+            start_date: formatDate(data.data.start_date),
+            end_date: formatDate(data.data.end_date),
+            lastEdited: formatDate(data.data.created_at),
+          };
 
-      if (deviceData.success) {
-        setDeviceData(deviceData.data);
-      }
+          setDeviceData(formattedData);
+        }
 
       // Fetch interventions
       const interventionsResponse = await getInterventions(device_id);
