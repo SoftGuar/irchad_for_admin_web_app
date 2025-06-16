@@ -56,6 +56,11 @@ export interface POI {
     action: string;
     createdAt: string;
   }
+
+    interface History {
+    action: string;
+    createdAt: string;
+  }
   
   interface ActivityHistoryProps {
     title: string;

@@ -54,7 +54,7 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
     const fetchInitialData = async () => {
       try {
         // Fetch POIs
-        const poiResponse = await fetch(`http://localhost:8000/pois/floor/${floorId}`);
+        const poiResponse = await fetch(`${process.env.NEXT_PUBLIC_CARTOGRAPHIE_SERVICE}/pois/floor/${floorId}`);
         if (!poiResponse.ok) {
           throw new Error("Failed to fetch POIs");
         }
@@ -66,7 +66,7 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
         setPois(transformedPOIs);
   
         // Fetch Zones
-        const zoneResponse = await fetch(`http://localhost:8000/zones/floor/${floorId}`);
+        const zoneResponse = await fetch(`${process.env.NEXT_PUBLIC_CARTOGRAPHIE_SERVICE}/zones/floor/${floorId}`);
         if (!zoneResponse.ok) {
           throw new Error("Failed to fetch Zones");
         }
@@ -83,7 +83,7 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
 
   const createZone = async (zone: Zone) => {
     try {
-      const response = await fetch("http://localhost:8000/zones", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_CARTOGRAPHIE_SERVICE}/zones`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -101,7 +101,7 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
   
   const updateZone = async (zoneId: string, updatedZone: Partial<Zone>) => {
     try {
-      const response = await fetch(`http://localhost:8000/zones/${zoneId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_CARTOGRAPHIE_SERVICE}/zones/${zoneId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -122,7 +122,7 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
   
   const deleteZone = async (zoneId: string) => {
     try {
-      const response = await fetch(`http://localhost:8000/zones/${zoneId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_CARTOGRAPHIE_SERVICE}/zones/${zoneId}`, {
         method: "DELETE",
       });
       if (!response.ok) {
@@ -143,7 +143,7 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
   
   const createPOI = async (poi: POI) => {
     try {
-      const response = await fetch("http://localhost:8000/pois", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_CARTOGRAPHIE_SERVICE}/pois`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -161,7 +161,7 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
   
   const updatePOI = async (poiId: string, updatedPOI: Partial<POI>) => {
     try {
-      const response = await fetch(`http://localhost:8000/pois/${poiId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_CARTOGRAPHIE_SERVICE}/pois/${poiId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -182,7 +182,7 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
   
   const deletePOI = async (poiId: string) => {
     try {
-      const response = await fetch(`http://localhost:8000/pois/${poiId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_CARTOGRAPHIE_SERVICE}/pois/${poiId}`, {
         method: "DELETE",
       });
       if (!response.ok) {
@@ -261,7 +261,7 @@ const FloorPlanProcessor: React.FC<FloorPlanProcessorProps> = ({
             include_furniture_detection: true
           }));
 
-          const response = await fetch('http://localhost:8000/process_floor_plan', {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_CARTOGRAPHIE_SERVICE}/process_floor_plan`, {
             method: 'POST',
             body: formData,
           });

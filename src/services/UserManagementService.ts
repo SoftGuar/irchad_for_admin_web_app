@@ -108,9 +108,22 @@ export const getUsers = async (type: string) => {
     });
   };
 
+   export const getInterventions = async (id: any) => {
+    const token = getToken();
+    return fetchClient(`/admin/intervention/device/${id}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}` 
+      },
+    });
+  };
+
+
+  
+
    export const deviceApi = {
     getAll: async (): Promise<ApiResponse<Device[]>> => {
       return await apiService.get("/admin/dispositive/");
     }};
-  
+
  

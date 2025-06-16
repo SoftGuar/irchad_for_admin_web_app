@@ -34,7 +34,7 @@ const AddFloor: React.FC<AddFloorProps> = ({ closePopup, environmentId }) => {
         grid_dimensions: [0, 0],
       };
 
-      const response = await fetch("http://localhost:8000/floors", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_CARTOGRAPHIE_SERVICE}/floors`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

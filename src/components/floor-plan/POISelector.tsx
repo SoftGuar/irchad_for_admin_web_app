@@ -22,7 +22,7 @@ const POISelector: React.FC<POISelectorProps> = ({ onPOICreate }) => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch('http://localhost:8000/pois/categories');
+        const response = await fetch(`${process.env.NEXT_PUBLIC_CARTOGRAPHIE_SERVICE}/pois/categories`);
         if (!response.ok) {
           throw new Error('Failed to fetch POI categories');
         }

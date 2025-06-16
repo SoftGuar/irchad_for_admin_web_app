@@ -1,15 +1,17 @@
 "use client";
 import Image from "next/image";
 import TransactionsList from "@/components/lists/TransactionsList";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { getTransactions } from "@/services/transactionsService";
 import { TransactionRes } from "@/types/transaction";
+import { ReloadContext } from '../../../utils/ReloadContext';
 
 
 const TransactionsPage = () => {
       const [transactions, setTransactions] = useState([]);
       const [loading, setLoading] = useState(true);
       const [error, setError] = useState<string|null>(null)
+      const { reloadKey } = useContext(ReloadContext);
     
       const fetchTransactions = async () => {
         try {
@@ -40,7 +42,7 @@ const TransactionsPage = () => {
   
       useEffect(() => { 
         fetchTransactions();
-      }, []);
+      }, [reloadKey]);
     
       if (loading) {
         return (

@@ -16,7 +16,7 @@ const ZonePOIList: React.FC<ZonePOIListProps> = ({ title, idEnv, type }) => {
   useEffect(() => {
     const fetchZoneData = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/zones/floor/${idEnv}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_CARTOGRAPHIE_SERVICE}/zones/floor/${idEnv}`);
         const data = await response.json();
         const transformedData: Zone[] = data.map((item: any) => ({
           id: item.id,
@@ -33,7 +33,7 @@ const ZonePOIList: React.FC<ZonePOIListProps> = ({ title, idEnv, type }) => {
 
     const fetchPOIData = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/pois/floor/${idEnv}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_CARTOGRAPHIE_SERVICE}/pois/floor/${idEnv}`);
         const data = await response.json();
         const transformedData: POI[] = data.map((item: any) => ({
           id: item.id || `poi-${Math.random().toString(36).substr(2, 9)}`,

@@ -21,7 +21,7 @@ const ZoneSelector: React.FC<ZoneSelectorProps> = ({ onZoneCreate }) => {
   useEffect(() => {
     const fetchZoneTypes = async () => {
       try {
-        const response = await fetch('http://localhost:8000/zones/types');
+        const response = await fetch(`${process.env.NEXT_PUBLIC_CARTOGRAPHIE_SERVICE}/zones/types`);
         if (!response.ok) {
           throw new Error('Failed to fetch zone types');
         }

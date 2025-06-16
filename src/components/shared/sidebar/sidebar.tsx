@@ -8,7 +8,8 @@ import {
   LayoutGrid,
   Settings,
   MapPin,
-  User
+  User,
+  Repeat
 } from "lucide-react";
 import Link from "next/link";
 
@@ -89,7 +90,14 @@ const Sidebar = () => {
         {/* Sub-menu */}
         {isAccountsOpen && (
           <div className="ml-6 mt-1 space-y-1">
-            {["users", "admins", "maintainers", "commercials", "decision-makers"].map((item) => (
+            {["users", "admins", "maintainers", "helpers", "commercials", "decision-makers"]
+            .filter((item) => {
+              const role = localStorage.getItem("role");
+              // Only show 'admins' if role is 'superadmin'
+              if (item === "admins") return role === "superAdmin";
+              return role === "admin";
+            })
+            .map((item) => (
               <Link
                 key={item}
                 href={`/${item}`}
@@ -133,18 +141,31 @@ const Sidebar = () => {
           <MapPin className="w-5 h-5" />
           <span>Environments</span>
         </Link>
+
+                {/* Transactions Section */}
         <Link
-  href="/system"
-  className={`flex items-center gap-2 px-3 py-2 text-sm rounded-md ${
-    selectedMain === "system"
-      ? "bg-[#FF8B00]/[0.64]"
-      : "text-gray-300 hover:text-white"
-  }`}
-  onClick={() => handleMainClick("system")}
->
-  <Settings className="w-5 h-5" />
-  <span>System</span>
-</Link>
+           href="/transactions"
+           className={`flex items-center gap-2 px-3 py-2 text-sm rounded-md ${
+             selectedMain === "transactions" ? "bg-[#FF8B00]/[0.64]" : "text-gray-300 hover:text-white"
+           }`}
+           onClick={() => handleMainClick("transactions")}
+         >
+           <Repeat className="w-5 h-5" />
+           <span>Transactions</span>
+         </Link>
+         
+        <Link
+            href="/system"
+            className={`flex items-center gap-2 px-3 py-2 text-sm rounded-md ${
+              selectedMain === "system"
+                ? "bg-[#FF8B00]/[0.64]"
+                : "text-gray-300 hover:text-white"
+            }`}
+            onClick={() => handleMainClick("system")}
+          >
+            <Settings className="w-5 h-5" />
+            <span>System</span>
+          </Link>
 
       </nav>
     </div>

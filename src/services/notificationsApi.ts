@@ -12,6 +12,7 @@ notifications: {
         return {
             success: true,
             data: await apiService.get(`/notifications/notifications/${userId}/ADMIN`),
+
         };
     },
 
@@ -53,3 +54,4 @@ notifications: {
     },
 },
 };
+
