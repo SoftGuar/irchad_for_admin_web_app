@@ -14,9 +14,27 @@ function DeviceDetail() {
   const [deviceData, setDeviceData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
+  // Format date helper function
+  const formatDate = (dateString: string) => {
+    if (!dateString) return "-";
+
+    const date = new Date(dateString);
+
+    // Format date as YYYY-MM-DD
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    // Format time as HH'H'MM
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+
+    return `${year}-${month}-${day} ${hours}H${minutes}`;
+  };
+
   useEffect(() => {
     const fetchDevice = async () => {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
 
       if (!token) {
         console.error("No auth token found");
@@ -24,19 +42,31 @@ function DeviceDetail() {
       }
 
       try {
-        const response = await fetch(`${API_URL}/admin/dispositive/${device_id}`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          `${API_URL}/admin/dispositive/${device_id}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         if (!response.ok) throw new Error("Failed to fetch device");
 
         const data = await response.json();
         if (data.success) {
-          setDeviceData(data.data);
+          // Format the dates in the device data
+          const formattedData = {
+            ...data.data,
+            created_at: formatDate(data.data.created_at),
+            start_date: formatDate(data.data.start_date),
+            end_date: formatDate(data.data.end_date),
+            lastEdited: formatDate(data.data.created_at),
+          };
+
+          setDeviceData(formattedData);
         }
       } catch (error) {
         console.error("Error fetching device:", error);
@@ -55,7 +85,15 @@ function DeviceDetail() {
     <div className="relative min-h-screen text-white bg-black w-full overflow-scroll">
       {/* Header */}
       <div className="absolute h-1/3 w-full rounded-b-lg overflow-hidden">
-        <Image src="/images/login_image.png" alt="Background" layout="fill" objectFit="cover" quality={100} priority className="rounded-b-lg" />
+        <Image
+          src="/images/login_image.png"
+          alt="Background"
+          layout="fill"
+          objectFit="cover"
+          quality={100}
+          priority
+          className="rounded-b-lg"
+        />
         <div className="absolute top-1/2 left-10 transform -translate-y-1/2 text-white">
           <h1 className="text-4xl font-bold drop-shadow-lg">Devices</h1>
           <p className="text-lg drop-shadow-md">Where you manage your devices</p>

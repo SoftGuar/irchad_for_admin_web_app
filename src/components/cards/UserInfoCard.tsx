@@ -65,12 +65,12 @@ const UserInfoCard: React.FC<UserInfoCardProps> = ({ user, isEditing, onSave, se
   };
 
   return (
-    <div className="bg-[#1E1E1E] p-6 rounded-lg shadow-md text-white">
-      <ul className="space-y-3 pl-16">
+    <div className="bg-[#1E1E1E] py-6 rounded-lg shadow-md text-white">
+      <ul className="space-y-3  pl-1">
         {userData.map(({name, label, value}) => (
           label !== "avatar" && label !== "role" && (label !== "deviceId" || user.role === "user") ? (
             <li className="flex" key={label}>
-              <span className="text-white text-lg font-semibold min-w-[250px] capitalize">{label.replace(/([A-Z])/g, ' $1').trim()}:</span>
+              <span className="text-white text-lg font-semibold min-w-[180px] capitalize">{label.replace(/([A-Z])/g, ' $1').trim()}:</span>
               {isEditing && name !== 'joinedAt' && name !== 'userName' && name !== 'id' ? (
                 <input 
                   type="text" 

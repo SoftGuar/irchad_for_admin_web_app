@@ -12,11 +12,14 @@ interface MetricCardsProps {
 }
 
 const MetricCards: React.FC<MetricCardsProps> = ({ title, value, unit, percentage, iconColor }) => {
+  // Ensure percentage is a valid number
+  const validPercentage = isNaN(percentage) ? 0 : Math.max(0, Math.min(100, percentage));
+  
   return (
     <div className="bg-[#2E2E2E] p-4 rounded-xl border border-gray-700 flex items-center gap-4 shadow-lg w-full">
       <div className="relative w-12 h-12">
         <Circle 
-          percent={percentage} 
+          percent={validPercentage} 
           strokeWidth={6} 
           strokeColor={iconColor} 
           trailColor="#333"
