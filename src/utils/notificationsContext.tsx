@@ -19,7 +19,7 @@ export function NotificationsProvider({ children, userId }: { children: ReactNod
     if (!userId) return;
 
     const connectWebSocket = () => {
-      const ws = new WebSocket(`ws://localhost:2000/notifications/websocket/ws/${userId}/COMMERCIAL`);
+      const ws = new WebSocket(`ws://localhost:2000/notifications/websocket/ws/${userId}/ADMIN`);
       wsRef.current = ws;
 
       ws.onopen = () => {
@@ -39,8 +39,8 @@ export function NotificationsProvider({ children, userId }: { children: ReactNod
           
           const notification: NotificationType = {
             id: incomingNotification.data.requestId,
-            title: incomingNotification.data.message?.pushNotification.title || 'New Notification',
-            message: incomingNotification.data.message?.pushNotification.body || 'You have a new notification.',
+            title: incomingNotification.data.message?.pushNotification.title|| incomingNotification.data.title || 'New Notification',
+            message: incomingNotification.data.message?.pushNotification.body ||incomingNotification.data.message || 'You have a new notification.',
             is_read: false,
             created_at: new Date().toISOString(),
           };
