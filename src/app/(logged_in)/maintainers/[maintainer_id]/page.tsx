@@ -70,12 +70,6 @@ const UserPage = () => {
     );
   }
 
-  const  activities = [
-    { action: "Logged in", createdAt: "2025-03-11 10:30 AM" },
-    { action: "Updated profile information", createdAt: "2025-03-10 03:15 PM" },
-    { action: "Changed password", createdAt: "2025-03-09 06:45 PM" },
-    { action: "Updated profile information", createdAt: "2025-02-20 06:45 PM" },
-  ]
 
 
       const onSave = async () => {
@@ -122,7 +116,6 @@ const UserPage = () => {
         <div className="lg:col-span-2">
           <UserInfoCard user={user} isEditing={isEditing} onSave={onSave} setUser={setUser} />
         </div>
-        <ActivityHistoryCard title="Activity History" activities={activities} />
       </div>
       {error && 
               <p className='w-1/2 text-center mt-4 text-sm text-red-500 bg-red-100 bg-opacity-10 border border-red-500 px-4 py-2 rounded-lg animate-shake'>

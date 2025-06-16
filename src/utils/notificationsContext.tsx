@@ -19,7 +19,7 @@ export function NotificationsProvider({ children, userId }: { children: ReactNod
     if (!userId) return;
 
     const connectWebSocket = () => {
-      const ws = new WebSocket(`ws://localhost:2000/notifications/websocket/ws/${userId}/COMMERCIAL`);
+      const ws = new WebSocket(`${process.env.WS_URL}/notifications/websocket/ws/${userId}/COMMERCIAL`);
       wsRef.current = ws;
 
       ws.onopen = () => {

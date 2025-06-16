@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { NotificationsProvider } from '@/utils/notificationsContext';
 import { useState, useEffect } from "react";
 import { getProfile } from "@/services/UserManagementService";
+import { ReloadProvider } from '@/utils/ReloadContext';
 
 export default function Layout({ 
     children 
@@ -73,6 +74,7 @@ export default function Layout({
           }, []);
     return (
         <>
+        <ReloadProvider>
             <NotificationsProvider userId={`${user.id}`}>
                 <Navbar />
                 <div className="flex">
@@ -81,6 +83,7 @@ export default function Layout({
                 </div>
                 <Footer />
             </NotificationsProvider>
+          </ReloadProvider>
         </>
     )
 }

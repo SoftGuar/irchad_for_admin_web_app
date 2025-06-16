@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import AddFloor from "@/components/popups/AddFloor";
 import FloorList from "@/components/lists/FloorList";
+import dotenv from 'dotenv';
+dotenv.config();
 
 const EnvironmentFloorsPage = () => {
   const { environment_id } = useParams();
@@ -13,7 +15,7 @@ const EnvironmentFloorsPage = () => {
   useEffect(() => {
     const fetchEnvironment = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/environments/${environment_id}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_CARTOGRAPHIE_SERVICE}/environments/${environment_id}`);
         const data = await response.json();
         setEnvironment(data);
       } catch (error) {

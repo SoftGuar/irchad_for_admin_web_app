@@ -3,6 +3,8 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import AddEnv from "@/components/popups/AddEnv"; // Ensure the correct path to AddEnv
+import dotenv from 'dotenv';
+dotenv.config();
 
 const EnvironmentListPage = () => {
   const [environments, setEnvironments] = useState<any[]>([]);
@@ -11,7 +13,7 @@ const EnvironmentListPage = () => {
 
   const fetchEnvironments = async () => {
     try {
-      const response = await fetch("http://localhost:8000/environments", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_CARTOGRAPHIE_SERVICE}/environments`, {
         method: "GET",
         cache: "no-store", // Disable caching
       });

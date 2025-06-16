@@ -169,6 +169,7 @@ import { useState } from "react";
 
 interface AddEnvProps {
   closePopup: () => void;
+  onAdd: (newEnv: any) => void;
 }
 
 const AddEnv: React.FC<AddEnvProps> = ({ closePopup }) => {
