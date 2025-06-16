@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import FloorPlanProcessor from '@/components/floor-plan/FloorPlanProcessor';
 import { Environment } from '@/types/environment';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const FullView = () => {
   const { floor_id } = useParams();
@@ -13,7 +15,7 @@ const FullView = () => {
   useEffect(() => {
     const fetchEnvironment = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/floors/${floor_id}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_CARTOGRAPHIE_SERVICE}/floors/${floor_id}`);
         if (!response.ok) throw new Error('Failed to fetch environment');
         const data = await response.json();
         
@@ -50,7 +52,7 @@ const FullView = () => {
     if (!environment) return;
 
     try {
-      const response = await fetch(`http://localhost:8000/floors/${floor_id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_CARTOGRAPHIE_SERVICE}/floors/${floor_id}`, {
         method: 'PUT', 
         headers: {
           'Content-Type': 'application/json',

@@ -50,7 +50,7 @@ const UserHeaderBar: React.FC<UserHeaderBarProps> = ({
           Personal Information
         </button>
 
-        {user.role === "user" ? (
+        {/*{user.role === "user" ? (
           <button
             className={`px-4 py-2 rounded-full underline underline-offset-2 ${
               activeTab === "device" ? "bg-[#7D511F] text-gray-50" : "bg-transparent text-gray-50"
@@ -63,7 +63,7 @@ const UserHeaderBar: React.FC<UserHeaderBarProps> = ({
             }}>
             Device
           </button>
-        ) : null}
+        ) : null}*/}
       </div>
     </div>
   );

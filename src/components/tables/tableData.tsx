@@ -143,7 +143,7 @@ const TableData = <T,>({
             
             ))}
             <div className={`flex ${page === "pois" || page === "zones" ? 'w-1/3' : 'w-1/12'} justify-end items-center space-x-6`}>
-              <Trash2 className="text-irchad-gray-light cursor-pointer w-5 h-5" onClick={() => onDelete(item)}/>
+              {page !== "transactions" ? <Trash2 className="text-irchad-gray-light cursor-pointer w-5 h-5" onClick={() => onDelete(item)}/> : null}
               {page === "devices" ? 
                 <Ban className="text-irchad-gray-light cursor-pointer w-5 h-5" onClick={() => onEdit(item)}/>
                 : 

@@ -1,7 +1,8 @@
 "use client";
 import { X } from "lucide-react";
 import { confirmTransaction } from "@/services/transactionsService";
-import { useState } from "react";
+import { useState , useContext} from "react";
+import {ReloadContext} from "../../utils/ReloadContext"
 
 interface ConfirmTransactionProps {
     transaction_id: string;
@@ -12,6 +13,11 @@ interface ConfirmTransactionProps {
 const ConfirmTransaction: React.FC<ConfirmTransactionProps> = ({ transaction_id, dispositive_id, closePopup}) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string|null>(null)
+    const { triggerReload } = useContext(ReloadContext);
+
+    const ReloadList = () => {
+      triggerReload(); 
+    };
     const handleConfirm = async () => {
       try {
           setLoading(true);
@@ -19,6 +25,7 @@ const ConfirmTransaction: React.FC<ConfirmTransactionProps> = ({ transaction_id,
           if (response.success){
             setLoading(false);
             closePopup();
+            ReloadList()
           }else{
             setLoading(false);
             setError(response.message || `Failed to confirm transaction`)

@@ -101,12 +101,6 @@ const UserPage = () => {
 
 
 
-  const  activities = [
-    { message: "Logged in", timestamp: "2025-03-11 10:30 AM" },
-    { message: "Updated profile information", timestamp: "2025-03-10 03:15 PM" },
-    { message: "Changed password", timestamp: "2025-03-09 06:45 PM" },
-    { message: "Updated profile information", timestamp: "2025-02-20 06:45 PM" },
-  ]
   
     return (
       <div className="p-0">
@@ -124,7 +118,6 @@ const UserPage = () => {
         <div className="lg:col-span-2">
           <UserInfoCard user={user} isEditing={isEditing} onSave={onSave} setUser={setUser} />
         </div>
-        <ActivityHistoryCard title="Activity History" activities={activities} />
       </div>
 
       {error && 
