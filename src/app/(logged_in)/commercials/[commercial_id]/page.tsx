@@ -101,10 +101,10 @@ const UserPage = () => {
 
 
   const  activities = [
-    { message: "Logged in", timestamp: "2025-03-11 10:30 AM" },
-    { message: "Updated profile information", timestamp: "2025-03-10 03:15 PM" },
-    { message: "Changed password", timestamp: "2025-03-09 06:45 PM" },
-    { message: "Updated profile information", timestamp: "2025-02-20 06:45 PM" },
+    { action: "Logged in", createdAt: "2025-03-11 10:30 AM" },
+    { action: "Updated profile information", createdAt: "2025-03-10 03:15 PM" },
+    { action: "Changed password", createdAt: "2025-03-09 06:45 PM" },
+    { action: "Updated profile information", createdAt: "2025-02-20 06:45 PM" },
   ]
 
 

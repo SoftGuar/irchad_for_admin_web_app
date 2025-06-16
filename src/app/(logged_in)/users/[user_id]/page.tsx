@@ -115,16 +115,13 @@ const UserPage = () => {
 
 
   const  activities = [
-    { message: "Logged in", timestamp: "2025-03-11 10:30 AM" },
-    { message: "Updated profile information", timestamp: "2025-03-10 03:15 PM" },
-    { message: "Changed password", timestamp: "2025-03-09 06:45 PM" },
-    { message: "Updated profile information", timestamp: "2025-02-20 06:45 PM" },
+    { action: "Logged in", createdAt: "2025-03-11 10:30 AM" },
+    { action: "Updated profile information", createdAt: "2025-03-10 03:15 PM" },
+    { action: "Changed password", createdAt: "2025-03-09 06:45 PM" },
+    { action: "Updated profile information", createdAt: "2025-02-20 06:45 PM" },
   ]
 
-  const EmergencyContacts  = [
-    {name:"Ahmed Kada", phoneNumber:"+213 735 64 46 32"},
-    {name:"Aissa Saouli", phoneNumber:"+213 735 64 46 32"},
-  ]
+
 
   const ContactsItems = HelperRecommandations
   .filter((contact:{ id: any; first_name: any; last_name: any; phone: any; email: any; status: any; user_id: any }) => contact.user_id == user.id)
@@ -153,20 +150,20 @@ const UserPage = () => {
     },
     "navigationHistory": [
       {
-        "message": "Device #AYGDYW32 is down!",
-        "timestamp": "2025-03-11 10:30 AM"
+        "action": "Device #AYGDYW32 is down!",
+        "createdAt": "2025-03-11 10:30 AM"
       },
       {
-        "message": "New order #9744152",
-        "timestamp": "2025-03-10 03:15 PM"
+        "action": "New order #9744152",
+        "createdAt": "2025-03-10 03:15 PM"
       },
       {
-        "message": "New user added by admin",
-        "timestamp": "2025-03-09 06:45 PM"
+        "action": "New user added by admin",
+        "createdAt": "2025-03-09 06:45 PM"
       },
       {
-        "message": "Device added",
-        "timestamp": "2025-02-20 06:45 PM"
+        "action": "Device added",
+        "createdAt": "2025-02-20 06:45 PM"
       }
     ],
     "reportedIssuesAndErrors": [
