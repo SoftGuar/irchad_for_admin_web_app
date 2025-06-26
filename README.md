@@ -28,6 +28,7 @@ This frontend integrates multiple backend services and provides the administrati
    - `admin-service`
    - `monitoring-service`
    - `cartographie-service`
+   - `Notification-service`
      
 ---
 
